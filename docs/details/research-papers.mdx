@@ -1,0 +1,15 @@
+---
+sidebar_position: 3
+---
+
+# Research Papers
+
+import React, { useEffect } from 'react';
+
+export default function RedirectPage() {
+    useEffect(() => {
+        window.location.href = 'http://neuralmagic.com/resources/technical-papers/';
+    }, []);
+
+    return <p>Redirecting...</p>;
+}

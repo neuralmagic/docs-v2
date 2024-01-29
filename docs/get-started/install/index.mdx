@@ -1,0 +1,88 @@
+---
+tags:
+- DeepSparse
+- SparseML
+- SparseZoo
+- NeuralMagic
+- Model Optimization
+- Deep Learning
+keywords:
+- DeepSparse
+- SparseML
+- SparseZoo
+- NeuralMagic
+- Model Optimization
+- Sparsity
+description: Step-by-step guides for installing NeuralMagic Products such as DeepSparse, SparseML, and SparseZoo.
+sidebar_label: Install
+sidebar_position: 1
+---
+
+# Installation
+
+This page provides a concise installation guide for NeuralMagic's DeepSparse, SparseML, and SparseZoo, catering to different AI pathways such as generative AI, object detection, image classification, and natural language processing (NLP). Each section includes a quick install command and links to detailed documentation for further exploration.
+
+## Prerequisites
+
+Before installation, ensure your system meets the requirements for [DeepSparse](./deepsparse#prerequisites), [SparseML](./sparseml#prerequisites), and [SparseZoo](./sparsezoo#prerequisites).
+
+## Task-Specific Installation
+
+### Generative AI
+
+Install DeepSparse, SparseML, and SparseZoo with generative AI support:
+
+<VersionInjector targetVersion="==VERSION" prepend="==">
+```bash
+pip install deepsparse[llm,server]==VERSION sparseml[llm]==VERSION
+```
+</VersionInjector>
+
+### Object Detection
+
+Install DeepSparse, SparseML, and SparseZoo with object detection support:
+
+<VersionInjector targetVersion="==VERSION" prepend="==">
+    ```bash
+    pip install deepsparse[yolov8,server]==VERSION sparseml[yolov8]==VERSION
+    ```
+</VersionInjector>
+
+### Image Classification
+
+Install DeepSparse, SparseML, and SparseZoo with image classification support:
+
+<VersionInjector targetVersion="==VERSION" prepend="==">
+    ```bash
+    pip install deepsparse[torchvision,server]==VERSION sparseml[torchvision]==VERSION
+    ```
+</VersionInjector>
+
+### Natural Language Processing
+
+Install DeepSparse, SparseML, and SparseZoo with image classification support:
+
+<VersionInjector targetVersion="==VERSION" prepend="==">
+    ```bash
+    pip install deepsparse[transformers,server]==VERSION sparseml[transformers]==VERSION
+    ```
+</VersionInjector>
+
+## Product Specific Installation
+
+For more detailed installation instructions, please visit the following pages:
+
+<div className="cards-container">
+    <a href="./deepsparse">
+        <h6>DeepSparse</h6>
+        <p>Installation instructions and details for DeepSparse.</p>
+    </a>
+    <a href="./sparseml">
+        <h6>SparseML</h6>
+        <p>Installation instructions and details for SparseML.</p>
+    </a>
+    <a href="./sparsezoo">
+        <h6>SparseZoo</h6>
+        <p>Installation instructions and details for SparseZoo.</p>
+    </a>
+</div>
