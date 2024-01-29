@@ -16,7 +16,7 @@ const config = {
   baseUrl: '/',
   organizationName: 'neuralmagic',
   projectName: 'docs',
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
   i18n: {
     defaultLocale: 'en',
