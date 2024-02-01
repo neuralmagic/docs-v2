@@ -1,0 +1,88 @@
+---
+sidebar_position: 2
+title: Convert LLMs from HF
+---
+
+
+# I have a HF model, how do I get it in DeepSparse?
+
+This guide is for people interested in exporting their Hugging Face-compatible LLMs to work in DeepSparse.
+
+## Export 
+
+Install SparseML with support for HF Transformers:
+```bash
+pip install sparseml-nightly[transformers]
+```
+
+> ### Note on system requirements
+> Due to inefficiencies in PyTorch ONNX export, a lot of system memory is required to export the models for inference. There are [improvements coming in torch>=2.2 so use the latest version possible](https://github.com/pytorch/pytorch/commit/b4a49124c8165a374a3ef49e14807ac05b3fc030).
+
+Download the weights of the model you want from HF Hub:
+```bash
+huggingface-cli download TinyLlama/TinyLlama-1.1B-Chat-v1.0 --local-dir original_model --local-dir-use-symlinks False
+```
+
+Export the model to ONNX (this produces the model in a new folder called `deployment/`)
+```bash
+sparseml.export --task text-generation original_model/
+```
+
+Optional: You can upload that `deployment/` folder back up to HF Hub for later use. See this [TinyLlama](https://huggingface.co/neuralmagic/TinyLlama-1.1B-Chat-v0.4-pruned50-quant-ds/tree/main) as an example.
+```bash
+huggingface-cli upload --repo-type model username/your-model-id original_model/deployment/
+```
+
+## Benchmark
+
+Benchmarking was performed on an AWS m7i.4xlarge instance using `deepsparse-nightly[llm]==1.7.0.20240103` with FP32 dense and sparse Llama models finetuned on GSM8k - full details of those models can be found in the [release blog](https://neuralmagic.com/blog/fast-llama-2-on-cpus-with-sparse-fine-tuning-and-deepsparse/).
+
+These benchmarks used [models from SparseZoo](https://sparsezoo.neuralmagic.com/?architectures=llama2&datasets=gsm8k&ungrouped=true), as seen from the prepended `zoo:`, but you can also use exported models hosted on Hugging Face by prepending with `hf:` such as [`hf:neuralmagic/TinyLlama-1.1B-Chat-v0.4-pruned50-quant-ds`](https://huggingface.co/neuralmagic/TinyLlama-1.1B-Chat-v0.4-pruned50-quant-ds).
+
+| Sparsity | Decode tokens/s | Decode Speedup | Prefill tokens/s (128 token input) | Prefill Speedup |
+| -------- | --------------- | -------------- | ---------------------------------- | --------------- |
+| 0%       | 3.63            | 1.00           | 66.06                              | 1.00            |
+| 50%      | 6.44            | 1.77           | 91.53                              | 1.39            |
+| 60%      | 7.79            | 2.14           | 101.71                             | 1.54            |
+| 70%      | 9.82            | 2.70           | 115.87                             | 1.75            |
+| 80%      | 13.17           | 3.62           | 140.62                             | 2.13            |
+
+Benchmarking commands:
+```bash
+export NM_BENCHMARK_KV_TOKENS=1
+
+# Decode benchmarking: Time to generate a token aka generated token/s
+deepsparse.benchmark --sequence_length 2048 --input_ids_length 1 --num_cores 8 zoo:llama2-7b-gsm8k_llama2_pretrain-base
+deepsparse.benchmark --sequence_length 2048 --input_ids_length 1 --num_cores 8 zoo:llama2-7b-gsm8k_llama2_pretrain-pruned50
+deepsparse.benchmark --sequence_length 2048 --input_ids_length 1 --num_cores 8 zoo:llama2-7b-gsm8k_llama2_pretrain-pruned60
+deepsparse.benchmark --sequence_length 2048 --input_ids_length 1 --num_cores 8 zoo:llama2-7b-gsm8k_llama2_pretrain-pruned70
+deepsparse.benchmark --sequence_length 2048 --input_ids_length 1 --num_cores 8 zoo:llama2-7b-gsm8k_llama2_pretrain-pruned80
+
+# Prefill benchmarking: Time to process 128 tokens aka prefill token/s
+deepsparse.benchmark --sequence_length 2048 --input_ids_length 128 --num_cores 8 zoo:llama2-7b-gsm8k_llama2_pretrain-base
+deepsparse.benchmark --sequence_length 2048 --input_ids_length 128 --num_cores 8 zoo:llama2-7b-gsm8k_llama2_pretrain-pruned50
+deepsparse.benchmark --sequence_length 2048 --input_ids_length 128 --num_cores 8 zoo:llama2-7b-gsm8k_llama2_pretrain-pruned60
+deepsparse.benchmark --sequence_length 2048 --input_ids_length 128 --num_cores 8 zoo:llama2-7b-gsm8k_llama2_pretrain-pruned70
+deepsparse.benchmark --sequence_length 2048 --input_ids_length 128 --num_cores 8 zoo:llama2-7b-gsm8k_llama2_pretrain-pruned80
+```
+
+## Inference
+
+Install DeepSparse LLM
+```bash
+pip install deepsparse-nightly[llm]
+```
+
+Then simply load your model using the `deepsparse.TextGeneration` class
+```python
+from deepsparse import TextGeneration
+
+model = TextGeneration(model_path="zoo:llama2-7b-gsm8k_llama2_pretrain-pruned60_quantized")
+prompt = "James decides to run 3 sprints 3 times a week. He runs 60 meters each sprint. How many total meters does he run a week?"
+print(model(prompt).generations[0].text)
+"""
+First find the total number of meters James runs in one sprint: 60 meters/sprint * 3 sprints = <<60*3=180>>180 meters
+Then multiply that number by the number of sprints per week to find the total number of meters he runs each week: 180 meters/sprint * 3 sprints/week = <<180*3=540>>540 meters/week
+540
+"""
+```
