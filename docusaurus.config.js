@@ -23,7 +23,7 @@ const config = {
     locales: ['en'],
   },
   plugins: [
-      'docusaurus-plugin-sass',
+    'docusaurus-plugin-sass',
   ],
   presets: [
     [
@@ -32,7 +32,7 @@ const config = {
         docs: {
           routeBasePath: '/',
           sidebarPath: './sidebars.js',
-          editUrl: 'https://github.com/neuralmagic/docs',
+          editUrl: 'https://github.com/neuralmagic/docs-v2/tree/main',
           editCurrentVersion: true,
           versions: {
             current: {
@@ -52,6 +52,11 @@ const config = {
     colorMode: {
       defaultMode: 'light',
       disableSwitch: true,
+    },
+    docs: {
+      sidebar: {
+        autoCollapseCategories: true,
+      },
     },
     navbar: {
       title: 'Docs',
@@ -74,7 +79,7 @@ const config = {
       style: 'dark',
       copyright: `Copyright © ${new Date().getFullYear()} Neuralmagic, Inc.`,
       links: [
-          ...footerLinks
+        ...footerLinks
       ]
     },
     tableOfContents: {
