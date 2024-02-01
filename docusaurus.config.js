@@ -53,6 +53,11 @@ const config = {
       defaultMode: 'light',
       disableSwitch: true,
     },
+    docs: {
+      sidebar: {
+        autoCollapseCategories: true,
+      },
+    },
     navbar: {
       title: 'Docs',
       logo: {
