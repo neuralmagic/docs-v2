@@ -1,0 +1,346 @@
+---
+tags:
+- Sparsification
+- Large Language Models
+- Generative AI
+keywords:
+- SparseML
+- SparseZoo
+- DeepSparse
+- LLM Sparsification
+description: This guide provides an overview of applying sparsification techniques to large language models using SparseML, with examples leveraging SparseZoo for model selection and DeepSparse for efficient inference.
+sidebar_label: Sparsify
+sidebar_position: 3
+
+---
+
+# Sparsify
+
+This section provides a technical overview of getting started with sparsifying neural networks to improve inference performance, specifically LLMs, using Neural Magic's SparseML for model optimization, SparseZoo for pre-trained models, and DeepSparse for accelerated inference.
+
+## Causal Language Modeling - LLMs
+
+:::note
+Ensure you have the necessary packages installed for Generative AI as outlined in the [Install Guide](./install#generative-ai).
+:::
+
+Sparsifying LLMs involves the use of SparseML to apply pruning and quantization techniques, enhancing model efficiency without significant losses in performance and leveraging DeepSparse for efficient inference on CPUs.
+
+The examples below demonstrate the process of sparsifying a Mistral 7b model from Hugging Face's model hub:
+```text
+mistralai/Mistral-7B-Instruct-v0.2
+```
+
+For additional models, explore the [Generative AI models in the SparseZoo](https://sparsezoo.neuralmagic.com/?modelSet=generative_ai).
+
+### Data Preparation
+
+SparseML requires a dataset to be used for both one shot methods and fine-tuning.
+The dataset is used in one shot as a calibration set and in finetuning as a training set.
+
+For the examples below, we use the Open Platypus dataset, which is available in the Hugging Face dataset hub:
+<Tabs>
+    <TabItem value="python" label="Python" default>
+
+        ```python
+        from datasets import load_dataset
+
+        dataset = load_dataset("garage-bAInd/Open-Platypus")
+        ```
+
+    </TabItem>
+
+    <TabItem value="bash" label="Bash" default>
+
+        ```bash
+        --dataset "garage-bAInd/Open-Platypus"
+        ```
+
+    </TabItem>
+</Tabs>
+
+Replace the dataset with your own dataset or use the provided example.
+The simplest way is to use either a Hugging Face dataset or a list of tokenized examples as shown below:
+
+```python
+from sparseml.transformers import SparseAutoTokenizer
+
+tokenizer = SparseAutoTokenizer.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
+samples = [
+    "The platypus is a mammal.",
+    "The platypus lays eggs.",
+    "The platypus is venomous."
+]
+dataset = [tokenizer(sample, return_tensors="pt") for sample in samples]
+```
+
+For comprehensive data preparation guidelines including formats like CSV and JSONL, refer to our [detailed datasets guide](../generative-ai/causal-language-modeling/data).
+
+### One Shot
+
+Applying pruning and quantization to a SparseGPT model in one shot is a simple and quick process utilizing SparseML resulting in smaller, faster, and more efficient models.
+To do so, we construct the model, dataset, and utilize SparseML to apply Modifiers to the model which apply SOTA pruning and quantization techniques:
+<Tabs>
+    <TabItem value="python" label="Python" default>
+
+        ```python
+        from sparseml.transformers import (
+            SparseAutoModelForCausalLM, SparseAutoTokenizer, load_dataset, apply
+        )
+        from sparseml.modifiers import SparseGPTModifier
+
+        model = SparseAutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
+        tokenizer = SparseAutoTokenizer.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
+        dataset = load_dataset("garage-bAInd/Open-Platypus")
+
+        modifier = SparseGPTModifier(
+            sparsity=0.5,
+            quantize=True,
+        )
+        apply(
+            model=model,
+            tokenizer=tokenizer,
+            dataset=dataset,
+            modifiers=modifier,
+            output_dir="./one-shot-example",
+        )
+
+        # <output>
+        # TODO
+        # </output>
+        ```
+
+    </TabItem>
+
+    <TabItem value="bash" label="Bash" default>
+
+        ```bash
+        echo "
+        modifiers:
+            SparseGPTModifier
+                sparsity: 0.5
+                quantize: True
+        " > one-shot.yaml
+
+        sparseml.transformers.apply \
+            --model "mistralai/Mistral-7B-Instruct-v0.2" \
+            --tokenizer "mistralai/Mistral-7B-Instruct-v0.2" \
+            --dataset "garage-bAInd/Open-Platypus" \
+            --recipe "./one-shot.yaml" \
+            --output-dir "./one-shot-example"
+
+        # <output>
+        # TODO
+        # </output>
+        ```
+
+    </TabItem>
+</Tabs>
+
+As seen in the output summary, the model is pruned and quantized, resulting in a smaller and faster model.
+If you want to improve the accuracy of the model, use the [fine-tuning](#one-shot-with-finetuning) method.
+Otherwise, the model is ready for efficient inference and dive into the [inference](#inference) section for next steps.
+
+### One Shot with Finetuning
+
+After pruning the model, finetuning can help in retaining performance post-sparsification.
+To enable this, we use the same model, dataset, and SparseML to apply Modifiers in stages to the model.
+Specifically, we first apply pruning in one shot, then finetuning the model on the same dataset, and finally apply quantization in one shot.
+The process is as follows:
+<Tabs>
+    <TabItem value="python" label="Python" default>
+
+        ```python
+        from sparseml.transformers import (
+            SparseAutoModelForCausalLM, SparseAutoTokenizer, load_dataset, apply
+        )
+        from sparseml.modifiers import SparseGPTModifier, TrainingModifier
+        from sparseml.core import RecipeStage
+
+        model = SparseAutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
+        tokenizer = SparseAutoTokenizer.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
+        dataset = load_dataset("garage-bAInd/Open-Platypus")
+
+        modifiers = [
+            RecipeStage(
+                modifiers=[
+                    SparseGPTModifier(sparsity=0.5)
+                ]
+            ),
+            RecipeStage(
+                modifiers=[
+                    TrainingModifier(epochs=2),
+                    ConstantPruningModifier(),
+                ]
+            ),
+            RecipeStage(
+                modifiers=[
+                    SparseGPTModifier(quantize=True)
+                ]
+            ),
+        ]
+        apply(
+            model=model,
+            tokenizer=tokenizer,
+            dataset=dataset,
+            modifiers=modifiers,
+            output_dir="./one-shot-finetune-example",
+        )
+
+        # <output>
+        # TODO
+        # </output>
+        ```
+
+    </TabItem>
+
+    <TabItem value="bash" label="Bash">
+
+        ```bash
+        echo "
+        pruning_stage:
+            modifiers:
+                - !SparseGPTModifier
+                    sparsity: 0.5
+        finetune_stage:
+            modifiers:
+                TrainingModifier:
+                    epochs: 2
+                ConstantPruningModifier:
+                    start: 0
+        quantize_stage:
+            modifiers:
+                - !SparseGPTModifier
+                    quantize: True
+        " > one-shot-finetune.yaml
+
+        sparseml.transformers.apply \
+            --model "mistralai/Mistral-7B-Instruct-v0.2" \
+            --tokenizer "mistralai/Mistral-7B-Instruct-v0.2" \
+            --dataset "garage-bAInd/Open-Platypus" \
+            --recipe "./one-shot-finetune.yaml" \
+            --output-dir "./one-shot-finetune-example"
+
+        # <output>
+        # TODO
+        # </output>
+        ```
+
+    </TabItem>
+</Tabs>
+
+As seen in the output, the model is pruned and quantized while retaining better perplexity.
+The model is now ready for efficient inference and can be used in the [inference](#inference) section for next steps.
+
+### Inference
+
+:::note
+Be sure to replace the sample models provided below with the models you have sparsified.
+A sample, sparsified Mistral model from the SparseZoo is used by default.
+:::
+
+<details>
+    <summary>Evaluating Accuracy</summary>
+
+    It is important to evaluate the accuracy of the model to ensure it meets the desired performance requirements.
+    To do so, we can use the following code to evaluate the model across a number of benchmarks available in the `lm-eval-harness`:
+    <Tabs>
+        <TabItem value="python" label="Python" default>
+
+            ```python
+            from sparseml import evaluate
+
+            evaluate(
+                "zoo:mistral-7b-open_platypus_orca_mistral_pretrain-pruned50_quantized",
+                integration="lm-eval-harness"
+            )
+
+            # <output>
+            # TODO: add output
+            # </output>
+            ```
+
+        </TabItem>
+        <TabItem value="bash" label="Bash">
+
+            ```bash
+            sparseml.evaluate \
+                "zoo:mistral-7b-open_platypus_orca_mistral_pretrain-pruned50_quantized" \
+                --integration "lm-eval-harness"
+
+            # <output>
+            # TODO: add output
+            # </output>
+            ```
+
+        </TabItem>
+    </Tabs>
+
+</details>
+
+After sparsifying the model, it can be used for inference in PyTorch with the following code:
+```python
+from sparseml.transformers import SparseAutoModelForCausalLM, SparseAutoTokenizer
+
+model_path = "zoo:mistral-7b-open_platypus_orca_mistral_pretrain-pruned50_quantized"
+model = SparseAutoModelForCausalLM.from_pretrained(model_path)
+tokenizer = SparseAutoTokenizer.from_pretrained(model_path)
+inputs = tokenizer(["Neural Magic is"], return_tensors="pt")
+generated_ids = model.generate(**inputs)
+outputs = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)
+print(outputs)
+
+# <output>
+# TODO
+# </output>
+```
+
+The above code; however, does not leverage the sparsity within the model for efficient inference.
+To do so, we first export the model to ONNX and inject KV caching logic so that it is ready for efficient inference on CPUs with DeepSparse:
+<Tabs>
+    <TabItem value="python" label="Python" default>
+
+        ```python
+        from sparseml import export
+
+        export(
+            "zoo:mistral-7b-open_platypus_orca_mistral_pretrain-pruned50_quantized",
+            task="text-generation",
+            sequence_length=1024,
+            output_path="./exported"
+        )
+
+        # <output>
+        # TODO: add output
+        # </output>
+        ```
+
+    </TabItem>
+    <TabItem value="bash" label="Bash">
+
+        ```bash
+        sparseml.export \
+            "zoo:mistral-7b-open_platypus_orca_mistral_pretrain-pruned50_quantized" \
+            --task "text-generation" \
+            --sequence_length 1024 \
+            --output_path "./exported"
+
+        # <output>
+        # TODO: add output
+        # </output>
+        ```
+
+    </TabItem>
+</Tabs>
+
+The exported model located at `./exported` can now be used for efficient inference with DeepSparse.
+To do so, sub in the exported model within the [Getting Started - Deploy](../getting-started/deploy) guide for your desired deployment method.
+
+---
+
+Explore more on sparsification and efficient deployment of AI models across various domains with Neural Magic's suite:
+
+- [Generative AI](../generative-ai)
+- [Computer Vision](../computer-vision)
+- [Natural Language Processing](../nlp)
+- [Custom Integrations](../custom-integrations)

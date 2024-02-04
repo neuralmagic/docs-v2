@@ -25,7 +25,7 @@
     top: 0;
     left: 0;
     background: var(--custom-background-blue-light);
-    width: calc((100vw - var(--body-width)) / 2 + var(--left-nav-width));
+    width: calc(var(--left-nav-width) + var(--margin-px));
     height: 100%;
     z-index: -1;
   }

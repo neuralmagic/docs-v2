@@ -1,6 +1,7 @@
 @import '_screen-layouts';
 
 html, :root {
+
   /* Heading Fonts */
   --ifm-heading-font-family: 'Space Grotesk', sans-serif;
   --ifm-heading-font-weight: 400;
@@ -60,29 +61,23 @@ Layouts
   html, :root {
     --gutter: 32px;
     --margin: auto;
+    --margin-px: calc(100vw - 1600px) / 2;
     --columns: 12;
-    --body-width: 1440px;
-    --left-nav-width: calc(1440px / 12 * 3);
-    --main-width: calc(1440px / 12 * 6);
-    --right-nav-width: calc(1440px / 12 * 3);
+    --body-width: 1600px;
+    --left-nav-width: calc(1600px / 12 * 3);
+    --main-width: calc(1600px / 12 * 6);
+    --right-nav-width: calc(1600px / 12 * 3);
     --columns-left-nav: 3;
     --columns-main: 6;
     --columns-right-bar: 3;
   }
-
-  //.navbar__inner {
-  //  width: 100%;
-  //  max-width: $body-width;
-  //  margin-left: $margin;
-  //  margin-right: $margin;
-  //
-  //}
 }
 
 @include for-lg-screens {
   html, :root {
     --gutter: 32px;
     --margin: 32px;
+    --margin-px: 32px;
     --columns: 12;
     --body-width: 100%;
     --left-nav-width: calc(100% / 12 * 3);
@@ -98,11 +93,12 @@ Layouts
   html, :root {
     --gutter: 16px;
     --margin: 32px;
+    --margin-px: 16px;
     --columns: 8;
-    --body-width: 100%;
-    --left-nav-width: calc(100% / 8 * 3);
-    --main-width: calc(100% / 8 * 5);
-    --right-nav-width: calc(100% / 8 * 0);
+    --body-width: calc(100% - 2 * 32px);
+    --left-nav-width: calc(100% / 8 * 2);
+    --main-width: calc(100% / 8 * 4);
+    --right-nav-width: calc(100% / 8 * 2);
     --columns-left-nav: 3;
     --columns-main: 5;
     --columns-right-bar: 0;
@@ -112,12 +108,12 @@ Layouts
 @include for-sm-screens {
   html, :root {
     --gutter: 16px;
-    --margin: auto;
+    --margin: 32px;
     --columns: 4;
-    --body-width: 540px;
-    --left-nav-width: calc(540px / 4 * 0);
-    --main-width: calc(540px / 4 * 4);
-    --right-nav-width: calc(540px / 4 * 0);
+    --body-width: calc(100% - 2 * 32px);
+    --left-nav-width: calc(100% / 4 * 0);
+    --main-width: calc(100% / 4 * 4);
+    --right-nav-width: calc(100% / 4 * 0);
     --columns-left-nav: 0;
     --columns-main: 4;
     --columns-right-bar: 0;
@@ -129,7 +125,7 @@ Layouts
     --gutter: 8px;
     --margin: 16px;
     --columns: 4;
-    --body-width: 100%;
+    --body-width: calc(100% - 2 * 16px);
     --left-nav-width: calc(100% / 4 * 0);
     --main-width: calc(100% / 4 * 4);
     --right-nav-width: calc(100% / 4 * 0);
@@ -209,6 +205,11 @@ Left nav cutomizations
   padding: 0;
   margin: 0;
   padding-top: 16px;
+}
+
+.theme-doc-sidebar-item-category, .theme-doc-sidebar-item-link {
+  font-size: var(--ifm-h4-font-size);
+  font-family: var(--ifm-heading-font-family);
 }
 
 

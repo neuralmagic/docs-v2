@@ -12,18 +12,18 @@ const config = {
   title: 'Neural Magic Documentation',
   tagline: 'The Neural Magic Platform provides a suite of software components to select, build, and run performant deep learning models.',
   favicon: 'img/favicon.ico',
-  url: 'https://docs.neuralmagic.com',
-  baseUrl: '/',
+  url: 'https://neuralmagic.github.io',
+  baseUrl: '/docs-v2',
   organizationName: 'neuralmagic',
   projectName: 'docs',
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
   i18n: {
     defaultLocale: 'en',
     locales: ['en'],
   },
   plugins: [
-      'docusaurus-plugin-sass',
+    'docusaurus-plugin-sass',
   ],
   presets: [
     [
@@ -74,7 +74,7 @@ const config = {
       style: 'dark',
       copyright: `Copyright © ${new Date().getFullYear()} Neuralmagic, Inc.`,
       links: [
-          ...footerLinks
+        ...footerLinks
       ]
     },
     tableOfContents: {

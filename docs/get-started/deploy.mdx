@@ -20,9 +20,9 @@ sidebar_position: 2
 # Deployment
 
 This guide provides detailed instructions for deploying neural networks using Neural Magic's suite, including DeepSparse, SparseZoo, and SparseML.
-You'll learn about the key processes such as benchmarking, pipeline creation, and server setup, focusing on text generation and object detection models.
+You'll learn about the key processes such as benchmarking, pipeline creation, and server setup, focusing on text generation models.
 
-## Generative AI - LLMs
+## Causal Language Modeling - LLMs
 
 :::note
 Ensure you've installed the required packages and dependencies for Generative AI as outlined in the [Install Guide](./install#generative-ai).
@@ -38,155 +38,6 @@ zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized
 
 For other models that work with these examples, browse through the [Generative AI models in the SparseZoo](https://sparsezoo.neuralmagic.com/?modelSet=generative_ai) to find one that fits your needs.
 
-<details>
-<summary>Benchmarking</summary>
-
-Benchmarking is an optional step that demonstrates how to validate the performance for both dense and sparsified models, while showcasing the benefits of sparsity in the process.
-
-First benchmark an unoptimized version of the model to establish the baseline.
-The SparseZoo stub for the dense model is:
-```text
-zoo:llama2-7b-ultrachat200k_llama2_pretrain-base
-```
-
-Utilizing this stub, benchmark the dense, baseline model with the following command:
-<Tabs>
-<TabItem value="bash" label="Bash" default>
-
-```bash
-deepsparse.benchmark "zoo:llama2-7b-ultrachat200k_llama2_pretrain-base"
-
-# <output>
-# TODO: add output
-# </output>
-```
-
-</TabItem>
-<TabItem value="python" label="Python">
-
-```python
-from deepsparse import benchmark
-
-result = benchmark("zoo:llama2-7b-ultrachat200k_llama2_pretrain-base")
-print(result)
-
-# <output>
-# TODO: add output
-# </output>
-```
-
-</TabItem>
-</Tabs>
-
-As seen in the output, the baseline model achieves a throughput of `x` tokens per second on a 4-core Intel CPU.
-
-Next, benchmark the sparsified model to compare the performance:
-<Tabs>
-<TabItem value="bash" label="Bash" default>
-
-```bash
-deepsparse.benchmark "zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized"
-
-# <output>
-# TODO: add output
-# </output>
-```
-
-</TabItem>
-<TabItem value="python" label="Python">
-
-```python
-from deepsparse import benchmark
-
-result = benchmark("zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized")
-print(result)
-
-# <output>
-# TODO: add output
-# </output>
-```
-
-</TabItem>
-</Tabs>
-
-The sparsified model achieves a throughput of `y` tokens per second on the same CPU, which is `z` times faster than the baseline model!
-
-</details>
-
-<details>
-<summary>Evaluating</summary>
-
-This is an optional step that demonstrates how to evaluate a model on a given dataset or set of datasets using DeepSparse to validate and compare the accuracies of dense and sparsified models.
-
-First, evaluate the baseline model to establish the accuracy baseline.
-The SparseZoo stub for the dense model is:
-```text
-zoo:llama2-7b-ultrachat200k_llama2_pretrain-base
-```
-
-Utilizing this stub, evaluate the dense, baseline model utilizing the `lm-eval-harness` with the following command:
-<Tabs>
-<TabItem value="bash" label="Bash" default>
-
-```bash
-deepsparse.evaluate "zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized" --integration lm
-
-# <output>
-# TODO: add output
-# </output>
-```
-
-</TabItem>
-<TabItem value="python" label="Python">
-
-```python
-from deepsparse import evaluate
-
-result = evaluate("zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized", integration="lm")
-print(result)
-
-# <output>
-# TODO: add output
-# </output>
-```
-
-</TabItem>
-</Tabs>
-
-As seen in the output, the baseline model achieves a perplexity of `x` on the validation dataset.
-
-Next, evaluate the sparsified model to compare the accuracy:
-<Tabs>
-<TabItem value="bash" label="Bash" default>
-
-```bash
-deepsparse.evaluate "zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized" --integration lm
-
-# <output>
-# TODO: add output
-# </output>
-```
-
-</TabItem>
-<TabItem value="python" label="Python">
-
-```python
-from deepsparse import evaluate
-
-result = evaluate("zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized", integration="lm")
-print(result)
-
-# <output>
-# TODO: add output
-# </output>
-```
-
-</TabItem>
-</Tabs>
-
-The sparsified model achieves a perplexity of `y` on the validation dataset, which is within `z` of the baseline model!
-</details>
-
 ### Pipeline
 
 DeepSparse pipelines for LLMs match the Hugging Face Transformers Python API, allowing for familiarity and easy integration with existing codebases.
@@ -195,7 +46,9 @@ To create a text generation pipeline for the example model and generate text, ut
 ```python
 from deepsparse import TextGeneration
 
-pipeline = TextGeneration("zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized")
+pipeline = TextGeneration(
+    "zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized"
+)
 result = pipeline("Neural Magic is")
 print(result)
 
@@ -214,7 +67,9 @@ For generative LLMS, the server supports the OpenAI inference standards, allowin
 To create a DeepSparse TextGeneration server that will run on port 5543 (default) with the OpenAI specs, utilize the following code:
 
 ```bash
-deepsparse.server "zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized" --integration openai
+deepsparse.server \
+  "zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized" \
+  --integration openai
 
 # <output>
 # TODO: add output
@@ -224,268 +79,216 @@ deepsparse.server "zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantize
 Now with the server running, you can send an HTTP request that conforms to the OpenAI spec to generate text.
 Below are examples for using `curl` and `python` to send a request to the server:
 <Tabs>
-<TabItem value="bash" label="Bash" default>
+    <TabItem value="python" label="Python" default>
 
-```bash
-curl http://localhost:5543/v1/chat/completions \
-    -H "Content-Type: application/json" \
-    -d '{
-        "model": "zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized",
-        "messages": "Neural Magic is",
-        "stream": true
-    }'
+        ```python
+        import openai
 
-# <output>
-# TODO: add output
-# </output>
-```
+        openai.api_key = "EMPTY"
+        openai.api_base = "http://localhost:5543/v1"
 
-</TabItem>
-<TabItem value="python" label="Python">
+        completion = openai.ChatCompletion.create(
+            messages="Neural Magic is",
+            stream=True,
+            max_tokens=30,
+            model="zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized",
+        )
+        for token in completion:
+            print(token)
 
-```python
-import openai
+        # <output>
+        # TODO: add output
+        # </output>
+        ```
 
-openai.api_key = "EMPTY"
-openai.api_base = "http://localhost:5543/v1"
+    </TabItem>
 
-stream = False
-completion = openai.ChatCompletion.create(
-    messages="Neural Magic is",
-    stream=stream,
-    max_tokens=30,
-    model="zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized",
-)
+    <TabItem value="bash" label="Bash">
 
-if stream:
-    for c in completion:
-        print(c)
-else:
-    print(completion)
+        ```bash
+        curl http://localhost:5543/v1/chat/completions \
+        -H "Content-Type: application/json" \
+        -d '{
+            "model": "zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized",
+            "messages": "Neural Magic is",
+            "stream": true
+        }'
 
-# <output>
-# TODO: add output
-# </output>
-```
+        # <output>
+        # TODO: add output
+        # </output>
+        ```
 
-</TabItem>
+    </TabItem>
 </Tabs>
 
 As seen in the output, the server generates text based on the input prompt.
 
-To complete the sections for Computer Vision (CV) - Object Detection in the deployment guide, let's provide instructions and examples tailored for object detection models using Neural Magic's suite.
+### Performance
 
-## CV - Object Detection
+Various performance metrics for inference performance and accuracy can be evaluated using DeepSparse.
+The following sections demonstrate how to benchmark the model and evaluate its accuracy.
+The sections below are optional and can be skipped.
 
-:::note
-Ensure you've installed the necessary packages and dependencies for CV - Object Detection as outlined in the [Install Guide](./install#object-detection).
-:::
-
-This section covers deploying object detection models with DeepSparse including benchmarking, pipeline creation, and server setup utilizing a pre-sparsified model from the SparseZoo.
-
-The examples below use a sparse, quantized YOLOv8 L model to demonstrate the deployment process.
-The model is referenced by the following SparseZoo stub for use in the Neural Magic suite:
-```text
-zoo:yolov8-l-coco-pruned85_quantized
-```
-
-For other models that work with these examples, browse through the [CV - Object Detection YOLOv8 models in the SparseZoo](https://sparsezoo.neuralmagic.com/?architectures=yolov8&datasets=coco&tasks=detection&modelSet=computer_vision) to find one that fits your needs.
-
-Additionally, the Pipeline and Server examples expect an image to be located at `image.jpg` in the current working directory.
-To download an example image, run the following command:
-```bash
-wget -O image.jpg https://raw.githubusercontent.com/neuralmagic/deepsparse/main/src/deepsparse/yolo/sample_images/basilica.jpg
-```
+#### Benchmarking
 
 <details>
-<summary>Benchmarking</summary>
+    <summary>Baseline</summary>
 
-Benchmarking is an optional step that demonstrates how to validate the performance for both dense and sparsified models, while showcasing the benefits of sparsity in the process.
+    To compare the performance of the sparsified model, we utilize a baseline, unoptimized version of the model from the SparseZoo.
+    The stub for the corresponding model is:
+    ```text
+    zoo:llama2-7b-ultrachat200k_llama2_pretrain-base
+    ```
 
-First benchmark an unoptimized version of the model to establish the baseline.
-The SparseZoo stub for the dense model is:
-```text
-zoo:yolov8-l-coco-base
-```
+    The following command utilizes the baseline stub and DeepSparse to establish the unoptimized model's performance:
 
-Utilizing this stub, benchmark the dense, baseline model with the following command:
-<Tabs>
-<TabItem value="bash" label="Bash" default>
+    <Tabs>
+        <TabItem value="python" label="Python" default>
 
-```bash
-deepsparse.benchmark "zoo:yolov8-l-coco-base"
+            ```python
+            from deepsparse import benchmark
 
-# <output>
-# TODO: add output
-# </output>
-```
+            result = benchmark("zoo:llama2-7b-ultrachat200k_llama2_pretrain-base")
+            print(result)
 
-</TabItem>
-<TabItem value="python" label="Python">
+            # <output>
+            # TODO: add output
+            # </output>
+            ```
 
-```python
-from deepsparse import benchmark
+        </TabItem>
+        <TabItem value="bash" label="Bash">
 
-result = benchmark("zoo:yolov8-l-coco-base")
-print(result)
+            ```bash
+            deepsparse.benchmark "zoo:llama2-7b-ultrachat200k_llama2_pretrain-base"
 
-# <output>
-# TODO: add output
-# </output>
-```
+            # <output>
+            # TODO: add output
+            # </output>
+            ```
 
-</TabItem>
-</Tabs>
+        </TabItem>
+    </Tabs>
 
-As seen in the output, the baseline model achieves a throughput of `x` images per second on a 4-core Intel CPU.
-
-Next, benchmark the sparsified model to compare the performance:
-<Tabs>
-<TabItem value="bash" label="Bash" default>
-
-```bash
-deepsparse.benchmark "zoo:yolov8-l-coco-pruned85_quantized"
-
-# <output>
-# TODO: add output
-# </output>
-```
-
-</TabItem>
-<TabItem value="python" label="Python">
-
-```python
-from deepsparse import benchmark
-
-result = benchmark("zoo:yolov8-l-coco-pruned85_quantized")
-print(result)
-
-# <output>
-# TODO: add output
-# </output>
-```
-</TabItem>
-</Tabs>
-
-The sparsified model achieves a throughput of `y` images per second on the same CPU, which is `z` times faster than the baseline model!
-
+    As seen in the output, the baseline model achieves a throughput of `x` tokens per second on a 4-core Intel CPU.
 </details>
+
+The following command utilizes the sparsified model and DeepSparse to establish the optimized model's performance:
+<Tabs>
+    <TabItem value="python" label="Python" default>
+
+        ```python
+        from deepsparse import benchmark
+
+        result = benchmark("zoo:llama2-7b-ultrachat200k_llama2_pretrain-base")
+        print(result)
+
+        # <output>
+        # TODO: add output
+        # </output>
+        ```
+
+    </TabItem>
+    <TabItem value="bash" label="Bash">
+
+        ```bash
+        deepsparse.benchmark "zoo:llama2-7b-ultrachat200k_llama2_pretrain-base"
+
+        # <output>
+        # TODO: add output
+        # </output>
+        ```
+
+    </TabItem>
+</Tabs>
+
+As seen in the output, the sparsified model achieves a throughput of `y` tokens per second on the same CPU, which is `z` times faster than the baseline model!
+
+#### Accuracy
 
 <details>
-<summary>Evaluating</summary>
+    <summary>Baseline</summary>
 
-This is an optional step that demonstrates how to evaluate a model on a given dataset or set of datasets using DeepSparse to validate and compare the accuracies of dense and sparsified models.
+    To compare the performance of the sparsified model, we utilize a baseline, unoptimized version of the model from the SparseZoo.
+    The stub for the corresponding model is:
+    ```text
+    zoo:llama2-7b-ultrachat200k_llama2_pretrain-base
+    ```
 
-First, evaluate the baseline model to establish the accuracy baseline.
-The SparseZoo stub for the dense model is:
-```text
-zoo:yolov8-l-coco-base
-```
+    The following command utilizes the baseline stub and DeepSparse to establish the unoptimized model's accuracy:
 
-Utilizing this stub, evaluate the dense, baseline model on the COCO128 dataset (default) with the following command:
-<Tabs>
-<TabItem value="bash" label="Bash" default>
+    <Tabs>
+        <TabItem value="python" label="Python" default>
 
-```bash
-deepsparse.yolov8.eval --model_path "zoo:yolov8-l-coco-base"
+            ```python
+            from deepsparse import evaluate
 
-# <output>
-# TODO: add output
-# </output>
-```
+            result = evaluate(
+                "zoo:llama2-7b-ultrachat200k_llama2_pretrain-base",
+                integration="lm-eval-harness"
+            )
+            print(result)
 
-</TabItem>
-</Tabs>
+            # <output>
+            # TODO: add output
+            # </output>
+            ```
 
-As seen in the output, the baseline model achieves a mAP of `x` on the validation dataset.
+        </TabItem>
+        <TabItem value="bash" label="Bash">
 
-Next, evaluate the sparsified model to compare the accuracy:
+            ```bash
+            deepsparse.evaluate \
+                "zoo:llama2-7b-ultrachat200k_llama2_pretrain-base" \
+                --integration "lm-eval-harness"
 
-<Tabs>
-<TabItem value="bash" label="Bash" default>
+            # <output>
+            # TODO: add output
+            # </output>
+            ```
 
-```bash
-deepsparse.yolov8.eval --model_path "zoo:yolov8-l-coco-pruned85_quantized"
+        </TabItem>
+    </Tabs>
 
-# <output>
-# TODO: add output
-# </output>
-```
-
-</TabItem>
-</Tabs>
-
-The sparsified model achieves a mAP of `y` on the validation dataset, which is within `z` of the baseline model!
-
+    As seen in the output, the baseline model achieves a throughput of `x` tokens per second on a 4-core Intel CPU.
 </details>
 
-### Pipeline
-
-DeepSparse pipelines for YOLOv8 models accept an image or images as inputs and return a list of bounding boxes and their associated classes and confidences.
-To create an object detection pipeline for the example model and process an image, utilize the following code:
-
-```python
-from deepsparse import Pipeline
-
-pipeline = Pipeline.create(task="yolov8", model_path="zoo:yolov8-l-coco-pruned85_quantized")
-result = pipeline("basilica.jpg")
-print(result)
-
-# <output>
-# TODO: add output
-# </output>
-```
-
-This code initializes an object detection pipeline and processes an image.
-
-### Server
-
-The DeepSparse Server wraps a pipeline in a REST API, allowing for easy deployment and inference.
-For object detection models, the server supports the MLServer inference standards, allowing for familiarity and easy integration with existing codebases.
-
-To create a DeepSparse Pipeline server that will run on port 5543 (default) with the MLServer specs, utilize the following code:
-
-```bash
-deepsparse.server "zoo:yolov8-l-coco-pruned85_quantized"
-```
-
-Now with the server running, you can send an HTTP request that conforms to the MLServer spec to process an image.
-Below are examples for using `curl` and `python` to send a request to the server:
-
+The following command utilizes the sparsified model and DeepSparse to establish the optimized model's accuracy within the `lm-eval-harness`:
 <Tabs>
-<TabItem value="bash" label="Bash" default>
+    <TabItem value="python" label="Python" default>
 
-```bash
-curl -X POST http://localhost:5543/predict \
-    -H "Content-Type: application/json" \
-    -d '{"inputs": ["path/to/image.jpg"]}'
+        ```python
+        from deepsparse import evaluate
 
-# <output>
-# TODO: add output
-# </output>
-```
+        result = evaluate(
+            "zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized",
+            integration="lm-eval-harness"
+        )
+        print(result)
 
-</TabItem>
-<TabItem value="python" label="Python">
+        # <output>
+        # TODO: add output
+        # </output>
+        ```
 
-```python
-import requests
+    </TabItem>
+    <TabItem value="bash" label="Bash">
 
-response = requests.post(
-    "http://localhost:5543/predict",
-    json={"inputs": ["path/to/image.jpg"]}
-)
+        ```bash
+        deepsparse.evaluate \
+            "zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized" \
+            --integration "lm-eval-harness"
 
-# <output>
-# TODO: add output
-# </output>
-```
+        # <output>
+        # TODO: add output
+        # </output>
+        ```
 
-</TabItem>
+    </TabItem>
 </Tabs>
 
-As seen in the output, the server processes the image and returns a list of bounding boxes and their associated classes and confidences.
-
+As seen in the output, the sparsified model achieves a score of `y`, which is within `z` of the baseline model!
 
 ---
 

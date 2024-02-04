@@ -15,7 +15,7 @@ $columns-right-bar: 0;
 @mixin layout-xl {
   $gutter: 32px !global;
   $margin: auto !global;
-  $body-width: 1440px !global;
+  $body-width: 1600px !global;
   $columns: 12 !global;
   $columns-left-nav: 3 !global;
   $columns-main: 6 !global;
@@ -64,14 +64,14 @@ $columns-right-bar: 0;
 
 // Media Query Mixins
 @mixin for-xl-screens {
-  @media (min-width: 1536px) {
+  @media (min-width: 1600px) {
     @include layout-xl;
     @content;
   }
 }
 
 @mixin for-lg-screens {
-  @media (min-width: 1200px) and (max-width: 1535px) {
+  @media (min-width: 1200px) and (max-width: 1599px) {
     @include layout-lg;
     @content;
   }
