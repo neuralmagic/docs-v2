@@ -4,7 +4,7 @@
 // There are various equivalent ways to declare your Docusaurus config.
 // See: https://docusaurus.io/docs/api/docusaurus-config
 
-import navLinks from "./navLinks";
+import navLinks from "./navlinks";
 import footerLinks from "./footerlinks";
 
 
