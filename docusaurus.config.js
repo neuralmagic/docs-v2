@@ -32,7 +32,7 @@ const config = {
         docs: {
           routeBasePath: '/',
           sidebarPath: './sidebars.js',
-          editUrl: 'https://github.com/neuralmagic/docs',
+          editUrl: 'https://github.com/neuralmagic/docs-v2/tree/main',
           editCurrentVersion: true,
           versions: {
             current: {
@@ -52,6 +52,11 @@ const config = {
     colorMode: {
       defaultMode: 'light',
       disableSwitch: true,
+    },
+    docs: {
+      sidebar: {
+        autoCollapseCategories: true,
+      },
     },
     navbar: {
       title: 'Docs',
