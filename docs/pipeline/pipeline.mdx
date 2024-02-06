@@ -1,0 +1,32 @@
+---
+sidebar_position: 1
+---
+
+## DeepSparse Pipeline 
+
+The DeepSparse Pipeline provides an easy to use interface for interacting with LLMs. To create a pipeline use the `create` method. 
+```python
+from deepsparse import Pipeline
+pipeline = Pipeline.create(
+        task="text_generation",
+        model_path="hf:neuralmagic/MiniChat-1.5-3B-pruned50-quant-ds",
+    )
+generation_config = {"temperature": 0.8, "do_sample": True, "max_new_tokens": 300}
+result = pipeline(
+    prompt="A character receives a mysterious package containing an object they’ve never seen before. What is it and how does it change their life?",
+    generation_config=generation_config,
+)
+print(result.generations[0].text)
+"""
+Determining the potential themes for the story and characters interactions would require additional character development, background information...
+"""
+```
+### Pipeline Knobs
+The following Pipeline parameters can be adjusted:
+- `max_new_tokens` to dictate the maximum number of new tokens to generate
+- `sequence_length` to determine the sequence length of the model 
+- `do_sample` whether to sample the output 
+- `temperature` to alter the selection process of the next word by adding temperature into the softmax operation 
+
+
+
