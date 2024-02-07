@@ -6,6 +6,7 @@
 
 import navLinks from "./navlinks";
 import footerLinks from "./footerlinks";
+import { themes as prismThemes } from 'prism-react-renderer';
 
 
 const config = {
@@ -87,7 +88,8 @@ const config = {
       maxHeadingLevel: 3,
     },
     prism: {
-      additionalLanguages: ['markup', 'css', 'javascript', 'bash', 'c', 'csharp', 'cpp', 'csv', 'docker', 'dot', 'git', 'go', 'graphql', 'http', 'java', 'json', 'latex', 'log', 'makefile', 'markdown', 'objectivec', 'perl', 'php', 'powershell', 'jsx', 'tsx', 'regex', 'rest', 'ruby', 'rust', 'sass', 'scss', 'scala', 'sql', 'swift', 'typescript', 'vim', 'wiki', 'yaml'],
+      theme: prismThemes.vsDark,
+      additionalLanguages: ['python', 'markup', 'css', 'javascript', 'bash', 'c', 'csharp', 'cpp', 'csv', 'docker', 'dot', 'git', 'go', 'graphql', 'http', 'java', 'json', 'latex', 'log', 'makefile', 'markdown', 'objectivec', 'perl', 'php', 'powershell', 'jsx', 'tsx', 'regex', 'rest', 'ruby', 'rust', 'sass', 'scss', 'scala', 'sql', 'swift', 'typescript', 'vim', 'wiki', 'yaml'],
     },
     algolia: {
       appId: 'CIS4HPXHOK',
