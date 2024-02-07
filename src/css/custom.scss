@@ -14,7 +14,7 @@ html, :root {
 
   /* Content Fonts */
   --ifm-font-family-base: 'Inter', sans-serif;
-  --ifm-font-size-base: 18px; /* Body 1 */
+  --ifm-font-size-base: 16px; /* Body 1 */
   --ifm-font-weight-semibold: 600;
   --ifm-link-hover-decoration: underline;
 
@@ -64,9 +64,9 @@ Layouts
     --margin-px: calc(100vw - 1600px) / 2;
     --columns: 12;
     --body-width: 1600px;
-    --left-nav-width: calc(1600px / 12 * 3);
+    --left-nav-width: calc(1600px / 12 * 2.5);
     --main-width: calc(1600px / 12 * 6);
-    --right-nav-width: calc(1600px / 12 * 3);
+    --right-nav-width: calc(1600px / 12 * 2.5);
     --columns-left-nav: 3;
     --columns-main: 6;
     --columns-right-bar: 3;
@@ -80,9 +80,9 @@ Layouts
     --margin-px: 32px;
     --columns: 12;
     --body-width: 100%;
-    --left-nav-width: calc(100% / 12 * 3);
+    --left-nav-width: calc(100% / 12 * 2.5);
     --main-width: calc(100% / 12 * 6);
-    --right-nav-width: calc(100% / 12 * 3);
+    --right-nav-width: calc(100% / 12 * 2.5);
     --columns-left-nav: 3;
     --columns-main: 6;
     --columns-right-bar: 3;
