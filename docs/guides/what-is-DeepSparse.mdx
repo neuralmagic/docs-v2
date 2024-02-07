@@ -1,0 +1,19 @@
+---
+sidebar_position: 1
+title: What is DeepSparse?
+---
+
+# What is DeepSparse?
+DeepSparse in an inference runtime that offers accelerated inference on commodity hardware such as CPUs. Models that run on DeepSparse can be created through SparseML. SparseML offers a suite of tools for optimizing models to run on the DeepSparse runtime. The optimization techniques include pruning and quantization. 
+
+Here's a mimimal example showing how to use DeepSparse for text generation. 
+```python
+from deepsparse import TextGeneration
+pipeline = TextGeneration(model="hf:mgoin/TinyStories-1M-ds")
+print(pipeline("Once upon a time, ").generations[0].text)
+"""
+One day, a little girl named Lily went to the park with her mommy. They saw a big slide and wanted to slide down the slide. Lily said, "Mommy, can I go on the slide?" Her mommy said, "Yes, you can go on the slide."
+
+Lily was so excited to go on the slide. She ran to the slide and started sliding down. She slid down the slide and laughed. She was so happy that she ran to the slide
+"""
+```

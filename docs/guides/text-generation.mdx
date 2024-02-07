@@ -1,0 +1,64 @@
+---
+sidebar_position: 1
+title: Text Generation Pipeline
+---
+
+# Text Generation Pipeline
+This guide goes through how to run inference generation models with DeepSparse. This is done by passing a path to a model to 
+`TextGeneration`. For example:
+
+```python
+from deepsparse import TextGeneration
+
+# construct a pipeline
+model_path = "hf:mgoin/TinyStories-33M-quant-deepsparse"
+pipeline = TextGeneration(model=model_path)
+
+# generate text
+prompt = "Once upon a time,"
+output = pipeline(prompt=prompt)
+print(output.generations[0].text)
+"""
+there was a little girl named Lily. She loved to play outside in the park with her friends. One day, Lily and her friends were playing hide and seek. Lily was hiding behind a big tree when she saw a butterfly. She wanted to catch it, but she didn't want to scare it away.
+
+Suddenly, Lily's friend Emma said, "I found a pretty butterfly! Let's catch it!" Lily was excited and said, "Yes, let's catch it!" They ran after
+"""
+```
+You can control the number of new tokens using the `max_new_tokens` argument. For instance, let's generate just 10 tokens.
+```python
+from deepsparse import TextGeneration
+
+# construct a pipeline
+model_path = "hf:mgoin/TinyStories-33M-quant-deepsparse"
+pipeline = TextGeneration(model=model_path)
+
+# generate text
+prompt = "Once upon a time,"
+output = pipeline(prompt=prompt, max_new_tokens=10)
+print(output.generations[0].text)
+"""
+ there was a little girl named Lily. She loved to
+"""
+```
+You can also decide to stream the result using `streaming=True`. 
+
+```python
+from deepsparse import TextGeneration
+
+# construct a pipeline
+model_path = "hf:mgoin/TinyStories-33M-quant-deepsparse"
+pipeline = TextGeneration(model=model_path)
+
+# generate text
+prompt = "Once upon a time,"
+output_iterator = pipeline(prompt=prompt, streaming=True, max_new_tokens=20)
+
+print(prompt, end="")
+for it in output_iterator:
+    print(it.generations[0].text, end="")
+
+"""
+Once upon a time, there was a little girl named Lily. She loved to play outside in the park with her friends. One
+"""
+
+```
