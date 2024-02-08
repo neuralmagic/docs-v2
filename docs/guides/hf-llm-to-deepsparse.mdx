@@ -4,36 +4,72 @@ title: Convert LLMs from HF
 ---
 
 
-# I have a HF model, how do I get it in DeepSparse?
+# I have a HF model, how do I use it with DeepSparse?
 
 This guide is for people interested in exporting their Hugging Face-compatible LLMs to work in DeepSparse.
 
-## Export 
+### Step 1: Install SparseML with HF Transformers Support
 
-Install SparseML with support for HF Transformers:
+SparseML provides tools for optimizing machine learning models for deployment. To install it along with the necessary support for Hugging Face Transformers, open your terminal and run:
 ```bash
 pip install sparseml-nightly[transformers]
 ```
 
-> ### Note on system requirements
+> #### Note on system requirements
 > Due to inefficiencies in PyTorch ONNX export, a lot of system memory is required to export the models for inference. There are [improvements coming in torch>=2.2 so use the latest version possible](https://github.com/pytorch/pytorch/commit/b4a49124c8165a374a3ef49e14807ac05b3fc030).
 
-Download the weights of the model you want from HF Hub:
+### Step 2: Preparing Your Model
+
+Before exporting your model, you need to download its weights from the Hugging Face Hub.
+
+Use the Hugging Face CLI tool to download the model of your choice. For example, to download the TinyLlama model, run:
 ```bash
 huggingface-cli download TinyLlama/TinyLlama-1.1B-Chat-v1.0 --local-dir original_model --local-dir-use-symlinks False
 ```
+This command saves the model to a directory named `original_model` in your current working directory.
+### Step 3: Exporting the Model to ONNX
 
-Export the model to ONNX (this produces the model in a new folder called `deployment/`)
+Now, you'll export the model to the ONNX format, which is compatible with DeepSparse.
+
+Run the following command to export your model:
 ```bash
 sparseml.export --task text-generation original_model/
 ```
+This process creates a new folder named `deployment/` containing the exported model in ONNX format.
 
-Optional: You can upload that `deployment/` folder back up to HF Hub for later use. See this [TinyLlama](https://huggingface.co/neuralmagic/TinyLlama-1.1B-Chat-v0.4-pruned50-quant-ds/tree/main) as an example.
+**Optional: Uploading the Model back to Hugging Face Hub**:
+If desired, you can upload the exported model back to the Hugging Face Hub for easy access or sharing. Replace `username/your-model-id` with your Hugging Face username and a new model ID.
 ```bash
-huggingface-cli upload --repo-type model username/your-model-id original_model/deployment/
+huggingface-cli upload --repo-type model username/your-model-id-ds original_model/deployment/
 ```
 
-## Benchmark
+Make sure to add the `-ds` ending and use the `deepsparse` in your README to make it easy to find compatible models!
+
+### Step 4: Running Inference with DeepSparse
+
+After exporting your model, you can run inference using DeepSparse.
+
+1. **Install DeepSparse LLM**:
+Install the DeepSparse library, which is specifically designed for running inference on large language models (LLMs) efficiently.
+```bash
+pip install deepsparse-nightly[llm]
+```
+
+2. **Load Your Model and Run Inference**:
+Use the following Python code to load your model and generate a response to a prompt:
+```python
+from deepsparse import TextGeneration
+
+# Replace the model_path with the path to your exported model or use a model from the DeepSparse Zoo
+model = TextGeneration(model_path="path_to_your_exported_model")
+prompt = "Your prompt here"
+print(model(prompt).generations[0].text)
+```
+
+Replace `"path_to_your_exported_model"` with the actual path to your ONNX model file. If you uploaded your model to the Hugging Face Hub, you can use the model's Hugging Face Hub path instead.
+
+
+## Benchmark Example
 
 Benchmarking was performed on an AWS m7i.4xlarge instance using `deepsparse-nightly[llm]==1.7.0.20240103` with FP32 dense and sparse Llama models finetuned on GSM8k - full details of those models can be found in the [release blog](https://neuralmagic.com/blog/fast-llama-2-on-cpus-with-sparse-fine-tuning-and-deepsparse/).
 
@@ -64,25 +100,4 @@ deepsparse.benchmark --sequence_length 2048 --input_ids_length 128 --num_cores 8
 deepsparse.benchmark --sequence_length 2048 --input_ids_length 128 --num_cores 8 zoo:llama2-7b-gsm8k_llama2_pretrain-pruned60
 deepsparse.benchmark --sequence_length 2048 --input_ids_length 128 --num_cores 8 zoo:llama2-7b-gsm8k_llama2_pretrain-pruned70
 deepsparse.benchmark --sequence_length 2048 --input_ids_length 128 --num_cores 8 zoo:llama2-7b-gsm8k_llama2_pretrain-pruned80
-```
-
-## Inference
-
-Install DeepSparse LLM
-```bash
-pip install deepsparse-nightly[llm]
-```
-
-Then simply load your model using the `deepsparse.TextGeneration` class
-```python
-from deepsparse import TextGeneration
-
-model = TextGeneration(model_path="zoo:llama2-7b-gsm8k_llama2_pretrain-pruned60_quantized")
-prompt = "James decides to run 3 sprints 3 times a week. He runs 60 meters each sprint. How many total meters does he run a week?"
-print(model(prompt).generations[0].text)
-"""
-First find the total number of meters James runs in one sprint: 60 meters/sprint * 3 sprints = <<60*3=180>>180 meters
-Then multiply that number by the number of sprints per week to find the total number of meters he runs each week: 180 meters/sprint * 3 sprints/week = <<180*3=540>>540 meters/week
-540
-"""
 ```

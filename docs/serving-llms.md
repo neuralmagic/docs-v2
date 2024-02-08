@@ -31,9 +31,9 @@ One day, a little girl named Lily went to the park with her mommy. They saw a bi
 
 ### Supported LLM Architectures 
 
-DeepSparse supports many Hugging Face models through [ONNX export through SparseML][ADD LINK], include the following architectures:
+DeepSparse supports many Hugging Face models through [ONNX export through SparseML](./guides/hf-llm-to-deepsparse.mdx), include the following architectures:
 
-* LLaMA & LLaMA-2 - [neuralmagic/Llama2-7b-chat-pruned50-quant-ds](https://huggingface.co/neuralmagic/Llama2-7b-chat-pruned50-quant-ds), [neuralmagic/Nous-Hermes-llama-2-7b-pruned50-quant-ds](https://huggingface.co/neuralmagic/Nous-Hermes-llama-2-7b-pruned50-quant-ds), [neuralmagic/TinyLlama-1.1B-Chat-v0.4-pruned50-quant-ds](https://huggingface.co/neuralmagic/TinyLlama-1.1B-Chat-v0.4-pruned50-quant-ds)
+* LLaMA & LLaMA-2 - [neuralmagic/Llama2-7b-chat-pruned50-quant-ds](https://huggingface.co/neuralmagic/Llama2-7b-chat-pruned50-quant-ds), [neuralmagic/Nous-Hermes-llama-2-7b-pruned50-quant-ds](https://huggingface.co/neuralmagic/Nous-Hermes-llama-2-7b-pruned50-quant-ds), [neuralmagic/TinyLlama-1.1B-Chat-v0.4-pruned50-quant-ds](https://huggingface.co/neuralmagic/TinyLlama-1.1B-Chat-v0.4-pruned50-quant-ds) - [SparseZoo Models](https://sparsezoo.neuralmagic.com/?architectures=llama2&ungrouped=true)
 * Mistral - [neuralmagic/OpenHermes-2.5-Mistral-7B-pruned50-quant-ds](https://huggingface.co/neuralmagic/OpenHermes-2.5-Mistral-7B-pruned50-quant-ds) - [SparseZoo Models](https://sparsezoo.neuralmagic.com/?architectures=mistral&ungrouped=true)
 * MPT - [neuralmagic/mpt-7b-chat-pruned50-quant-ds](https://huggingface.co/neuralmagic/mpt-7b-chat-pruned50-quant-ds) - [SparseZoo Models](https://sparsezoo.neuralmagic.com/?architectures=mpt&ungrouped=true)
 * OPT - facebook/opt-6.7b, etc. - [SparseZoo Models](https://sparsezoo.neuralmagic.com/?architectures=opt&ungrouped=true)
