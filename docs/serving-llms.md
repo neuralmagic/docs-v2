@@ -43,3 +43,101 @@ DeepSparse supports many Hugging Face models through [ONNX export through Sparse
 ### Making new DeepSparse-optimized models
 
 [See the guide for compressing LLMs with SparseGPT](./guides/one-shot-llms-with-sparseml.mdx)
+
+
+## Offline Batched Inference
+
+A notable feature of the DeepSparse `TextGeneration` class is the availability to specify `continuous_batch_sizes`, which allows for efficient batch processing of multiple prompts simultaneously, optimizing resource usage and accelerating token generation throughput.
+
+This example includes a set of diverse prompts and uses `continuous_batch_sizes=[4]` in order to be able to generate output tokens for 4 of the prompt requests simultaneously.
+
+```python
+from deepsparse import TextGeneration
+
+model = TextGeneration(
+    model_path="hf:neuralmagic/TinyLlama-1.1B-Chat-v0.4-pruned50-quant-ds",
+    continuous_batch_sizes=[4],
+)
+
+prompts = [
+    "Beneath the ancient oak tree ",
+    "In a world where time flows backwards ",
+    "When the last star in the universe flickered ",
+    "Inside the labyrinth of endless mirrors ",
+    "Under the neon lights of a forgotten city ",
+    "As the clock struck midnight in the enchanted forest ",
+    "Amidst the whispers of a haunted library ",
+    "On the edge of a dream, where reality blurs ",
+]
+outputs = model(prompt=prompts, max_new_tokens=50)
+
+for i, gen in enumerate(outputs.generations):
+    print(f"#{i}: {prompts[i]}{gen.text}")
+```
+
+## OpenAI-Compatible Server
+
+DeepSparse LLM can be deployed as a server that implements the OpenAI API protocol. This allows DeepSparse to be used as a drop-in replacement for applications using OpenAI API.
+By default, it starts the server at `http://localhost:5543`. You can specify the address with `--host` and `--port` arguments. The server currently hosts one model at a time (TinyLlama-Chat in the command below) and implements [list models](https://platform.openai.com/docs/api-reference/models/list), [create chat completion](https://platform.openai.com/docs/api-reference/chat/create), and [create completion](https://platform.openai.com/docs/api-reference/completions/create) endpoints.
+
+Start the server:
+
+```bash
+deepsparse.server --task text-generation --integration openai --model_path hf:neuralmagic/TinyLlama-1.1B-Chat-v0.4-pruned50-quant-ds
+```
+
+This server can be queried in the same format as OpenAI API. For example, list the models:
+
+```bash
+curl http://localhost:5543/v1/models
+```
+
+#### Using OpenAI Completions API with DeepSparse
+
+Query the model with input prompts:
+
+```bash
+curl http://localhost:5543/v1/completions \
+    -H "Content-Type: application/json" \
+    -d '{
+        "model": "hf:neuralmagic/TinyLlama-1.1B-Chat-v0.4-pruned50-quant-ds",
+        "prompt": "San Francisco is a",
+        "max_tokens": 7,
+        "temperature": 0
+    }'
+```
+
+Since this server is compatible with OpenAI API, you can use it as a drop-in replacement for any applications using OpenAI API. For example, another way to query the server is via the `openai` python package:
+
+```python
+from openai import OpenAI
+
+client = OpenAI(base_url="http://localhost:5543/v1", api_key="EMPTY")
+model = client.models.list().data[0][1]
+print(f"Accessing model API '{model}'")
+
+completion = client.completions.create(model=model, prompt="San Francisco is a")
+print("Completion result:", completion)
+```
+
+#### Using OpenAI Chat API with DeepSparse
+
+The DeepSparse server is designed to support the OpenAI Chat API, allowing you to engage in dynamic conversations with the model. The chat interface is a more interactive way to communicate with the model, allowing back-and-forth exchanges that can be stored in the chat history. This is useful for tasks that require context or more detailed explanations.
+
+Querying the model using OpenAI Chat API:
+
+You can use the [create chat completion](https://platform.openai.com/docs/api-reference/chat/create) endpoint to communicate with the model in a chat-like interface:
+
+```bash
+curl http://localhost:5543/v1/chat/completions \
+    -H "Content-Type: application/json" \
+    -d '{
+        "model": "hf:neuralmagic/TinyLlama-1.1B-Chat-v0.4-pruned50-quant-ds",
+        "messages": [
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": "Who won the world series in 2020?"}
+        ]
+    }'
+```
+
+For more in-depth examples and advanced features of the chat API, you can refer to the official OpenAI documentation.
