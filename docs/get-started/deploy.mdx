@@ -147,9 +147,9 @@ The sections below are optional and can be skipped.
         <TabItem value="python" label="Python" default>
 
             ```python
-            from deepsparse import benchmark
+            from deepsparse.benchmark import benchmark_model
 
-            result = benchmark("zoo:llama2-7b-ultrachat200k_llama2_pretrain-base")
+            result = benchmark_model("zoo:llama2-7b-ultrachat200k_llama2_pretrain-base")
             print(result)
 
             # <output>
