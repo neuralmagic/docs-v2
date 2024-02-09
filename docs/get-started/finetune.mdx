@@ -216,7 +216,7 @@ To do so, we first export the model to ONNX and inject KV caching logic so that 
             "zoo:llama2-7b-open_platypus_orca_llama2_pretrain-pruned50_quantized",
             task="text-generation",
             sequence_length=1024,
-            output_path="./exported"
+            target_path="./exported"
         )
 
         # <output>
@@ -232,7 +232,7 @@ To do so, we first export the model to ONNX and inject KV caching logic so that 
             "zoo:llama2-7b-open_platypus_orca_llama2_pretrain-pruned50_quantized" \
             --task "text-generation" \
             --sequence_length 1024 \
-            --output_path "./exported"
+            --target_path "./exported"
 
         # <output>
         # TODO: add output
