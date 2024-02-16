@@ -3,6 +3,7 @@ import MDXComponents from '@theme-original/MDXComponents';
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import DocCardList from '@theme/DocCardList';
 
 import GithubReleases from "../../components/github-releases";
 import VersionInjector from "../../components/version-injector";
@@ -14,6 +15,7 @@ export default {
   ...MDXComponents,
 
   // New mappings
+    DocCardList,
   GithubReleases,
   VersionInjector,
   Tabs,

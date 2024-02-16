@@ -28,7 +28,7 @@ html, :root {
   --ifm-background-color: #f6fbfe;
   --custom-background-blue-dark: #052D52;
   --custom-background-blue-light: #e1f0fd;
-  --custom-surface-color: #ffffff;
+  --custom-surface-color: #fdfdfe;
   --custom-surface-blue: #c5eefb;
   --custom-surface-dark: #222222;
   --custom-divider-color: #222222;
@@ -287,44 +287,4 @@ Main customizations
 
 .theme-doc-version-badge {
   display: none;
-}
-
-/**
-Cards customizations
- */
-
-.cards-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-bottom: var(--ifm-paragraph-margin-bottom);
-}
-
-.cards-container > a {
-  max-width: calc(50% - 16px);
-  flex-basis: calc(50% - 16px);
-  flex-grow: 1;
-  text-decoration: none;
-  border-radius: 8px;
-  border: 1px solid var(--ifm-toc-border-color);
-  transition: border-color var(--ifm-transition-fast) var(--ifm-transition-timing-default);
-  padding: 16px;
-
-  h1, h2, h3, h4, h5, h6 {
-    margin: 0;
-    padding: 0;
-    font-size: var(--ifm-h3-font-size);
-    color: var(--ifm-color-primary);
-  }
-
-  span, p, div {
-    font-size: var(--ifm-font-size-base);
-    color: var(--ifm-color-content-secondary);
-    margin: 16px 0 0;
-    padding: 0;
-  }
-}
-
-.cards-container > a:hover {
-  border: 1px solid var(--ifm-color-primary);
 }
