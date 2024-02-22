@@ -58,7 +58,6 @@ export default function CodeBlockString({
   // "title=\"xyz\"" => title: "\"xyz\""
   const title = parseCodeBlockTitle(metastring) || titleProp;
   const parsedCode = parseOutput(children);
-  console.log(parsedCode);
   const {lineClassNames, code} = parseLines(parsedCode.code, {
     metastring,
     language,

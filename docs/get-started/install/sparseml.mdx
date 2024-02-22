@@ -1,22 +1,23 @@
 ---
 tags:
-- SparseML
-- NeuralMagic
-- AI Optimization
-- Deep Learning
+- sparseml
+- installation
+- setup
+- sparsification
+- optimization
 keywords:
-- SparseML
-- NeuralMagic
-- AI Optimization
-- Sparsity
-description: Step-by-step guide for installing NeuralMagic's SparseML.
+- SparseML installation
+- model optimization
+- PyTorch integration
+description: Install SparseML, Neural Magic's toolkit for optimizing deep learning models through state-of-the-art sparsification techniques.
 sidebar_label: SparseML
 sidebar_position: 1
 ---
 
 # Installing SparseML
 
-Welcome to the SparseML installation guide. Here, you'll find instructions for various installation methods including PyPI and advanced options via GitHub.
+SparseML is Neural Magic's core toolkit for streamlining the optimization of deep learning models using cutting-edge sparsification methods (pruning, quantization, etc.).
+This guide covers installation options, including PyPI, GitHub, and specialized applications for various AI domains.
 
 :::note
 The installation commands correspond to the version of SparseML you're viewing in the documentation.
@@ -26,29 +27,22 @@ The installation commands correspond to the version of SparseML you're viewing i
 
 ### Hardware Requirements
 
-- CPU
-  - Intel, AMD, and ARM CPUs are all supported.
-- RAM
-  - 4GB or more is recommended, but it depends on the flow and model being used.
-- GPU
-    - NVIDIA GPUs are supported and tested and it is recommended to have a GPU with at least 16GB of memory.
-    - AMD GPUs are supported but not actively tested.
+- <b>CPU:</b> Intel, AMD, or ARM
+- <b>RAM:</b> 4GB+ recommended (depends on your models and workflows)
+- <b>GPU:</b> NVIDIA (recommended, 16GB+ VRAM); AMD (limited support)
 
 ### Software Requirements
 
-- OS
-  - Linux is supported and is tested across Ubuntu, CentOS, and RedHat distributions.
-  - macOS is supported but not actively tested.
-  - Windows is not supported at this time. However, Windows users can install SparseML via Docker or a virtual machine.
-- Python 3.8-3.11
-- PyTorch >= 1.1.0, < 2.2
+- <b>OS:</b> Linux (Ubuntu, CentOS, RedHat, etc.). MacOS (limited support)
+- <b>Python:</b> 3.8 - 3.11
+- <b>PyTorch:</b> >= 1.1.0, < 2.2
 
 
 ## Installation
 
 ### PyPI
 
-To install the current version of SparseML via PyPI, utilize the following command:
+For the most common use case, install the current release version of SparseML using PyPi:
 
 <VersionInjector targetProduct="sparseml" targetVersion="==VERSION" prepend="==">
     ```bash
@@ -56,32 +50,34 @@ To install the current version of SparseML via PyPI, utilize the following comma
     ```
 </VersionInjector>
 
-### GitHub
+### GitHub (Advanced)
 
-Advanced users can install from source code by utilizing the following command:
+For development purposes or advanced use cases, install directly from the GitHub repository:
 
 <VersionInjector targetProduct="sparseml" prepend="v" currentTag="main" ignoreNightly={true}>
     ```bash
-    pip install git+https://github.com/neuralmagic/sparseml.git@VERSION
+    pip install git+https://github.com/neuralmagic/sparseml.git@VERSION[dev]
     ```
 </VersionInjector>
 
-Additionally, the following commands install via GitHub, but from a locally cloned repository:
+Or from a locally cloned repository:
 
 <VersionInjector targetProduct="sparseml" prepend="tags/v" currentTag="main" ignoreNightly={true}>
     ```bash
     git clone https://github.com/neuralmagic/sparseml.git
     cd sparseml
     git checkout VERSION
-    pip install -e .
+    pip install -e .[dev]
     ```
 </VersionInjector>
 
 ## Specialized Installations
 
+Install SparseML with tailored support with the following extras for domain-specific use cases and tasks.
+
 ### Generative AI: HuggingFace
 
-For generative AI, particularly transformer architectures, this extra provides built in support for models like Llama, Mistral, MPT, GPT, and others.
+This extra provides built-in support for models like Llama, Mistral, MPT, GPT, and others for generative AI, particularly transformer architectures.
 It enables compatibility of HuggingFace's transformers pipelines and models to SparseML allowing SOTA pruning, quantization, and other optimizations.
 
 <VersionInjector targetProduct="sparseml[llm]" targetVersion="==VERSION" prepend="==">
@@ -92,19 +88,19 @@ It enables compatibility of HuggingFace's transformers pipelines and models to S
 
 ### Object Detection: YOLOv8
 
-For object detection, this extra provides built in support for YOLOv8 models.
-It enables compatibility of YOLOv8 models to SparseML allowing SOTA pruning, quantization, and other optimizations.
+For object detection, this extra provides built-in support for YOLOv8 models.
+It enables compatibility of YOLOv8 models to SparseML, allowing SOTA pruning, quantization, and other optimizations.
 
 <VersionInjector targetProduct="sparseml[yolov8]" targetVersion="==VERSION" prepend="==">
-```bash
-pip install sparseml[yolov8]==VERSION
-```
+    ```bash
+    pip install sparseml[yolov8]==VERSION
+    ```
 </VersionInjector>
 
 ### Image Classification: TorchVision
 
-For image classification, this extra provides built in support for TorchVision models.
-It enables compatibility of TorchVision models to SparseML allowing SOTA pruning, quantization, and other optimizations.
+For image classification, this extra provides built-in support for TorchVision models.
+It enables compatibility of TorchVision models to SparseML, allowing SOTA pruning, quantization, and other optimizations.
 
 <VersionInjector targetProduct="sparseml[torchvision]" targetVersion="==VERSION" prepend="==">
     ```bash
@@ -114,8 +110,8 @@ It enables compatibility of TorchVision models to SparseML allowing SOTA pruning
 
 ### Natural Language Processing: HuggingFace
 
-For natural language processing, this extra provides built in support for HuggingFace's transformers models.
-It enables compatibility of HuggingFace models to SparseML allowing SOTA pruning, quantization, and other optimizations.
+This extra provides built-in support for HuggingFace's transformers models for natural language processing.
+It enables compatibility of HuggingFace models to SparseML, allowing SOTA pruning, quantization, and other optimizations.
 
 <VersionInjector targetProduct="sparseml[transformers]" targetVersion="==VERSION" prepend="==">
     ```bash
@@ -125,7 +121,7 @@ It enables compatibility of HuggingFace models to SparseML allowing SOTA pruning
 
 ### Development
 
-For development purposes, this extra provides built in support for development tools.
+For development purposes, this extra provides built-in support for development tools.
 
 <VersionInjector targetProduct="sparseml[dev]" targetVersion="==VERSION" prepend="==">
     ```bash

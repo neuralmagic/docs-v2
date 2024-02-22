@@ -1,18 +1,15 @@
 ---
 tags:
+- installation
+- setup
 - DeepSparse
 - SparseML
 - SparseZoo
-- NeuralMagic
-- Model Optimization
-- Deep Learning
 keywords:
-- DeepSparse
-- SparseML
-- SparseZoo
-- NeuralMagic
-- Model Optimization
-- Sparsity
+- Neural Magic installation
+- DeepSparse setup
+- SparseML setup
+- SparseZoo setup
 description: Step-by-step guides for installing NeuralMagic Products such as DeepSparse, SparseML, and SparseZoo.
 sidebar_label: Install
 sidebar_position: 1
@@ -20,17 +17,21 @@ sidebar_position: 1
 
 # Installation
 
-This page provides a concise installation guide for NeuralMagic's DeepSparse, SparseML, and SparseZoo, catering to different AI pathways such as generative AI, object detection, image classification, and natural language processing (NLP). Each section includes a quick install command and links to detailed documentation for further exploration.
+This page guides you through installing Neural Magic's core products – DeepSparse, SparseML, and SparseZoo.
+We provide streamlined installation commands for common use cases and links for in-depth instructions.
 
 ## Prerequisites
 
-Before installation, ensure your system meets the requirements for [DeepSparse](./deepsparse#prerequisites), [SparseML](./sparseml#prerequisites), and [SparseZoo](./sparsezoo#prerequisites).
+Ensure your system meets the following requirements before proceeding with the installation based on your use case:
+- [DeepSparse](./deepsparse#prerequisites)
+- [SparseML](./sparseml#prerequisites)
+- [SparseZoo](./sparsezoo#prerequisites)
 
 ## Task-Specific Installation
 
-### Generative AI
+Choose the installation command tailored to your primary deep learning task.
 
-Install DeepSparse, SparseML, and SparseZoo with generative AI support:
+### Generative AI: LLMs
 
 <VersionInjector targetProduct={["deepsparse", "sparseml"]} targetVersion="==VERSION" prepend="==">
 ```bash
@@ -38,9 +39,7 @@ pip install deepsparse[llm,server]==VERSION sparseml[llm]==VERSION
 ```
 </VersionInjector>
 
-### Object Detection
-
-Install DeepSparse, SparseML, and SparseZoo with object detection support:
+### Computer Vision: Object Detection
 
 <VersionInjector targetProduct={["deepsparse", "sparseml"]} targetVersion="==VERSION" prepend="==">
     ```bash
@@ -48,9 +47,7 @@ Install DeepSparse, SparseML, and SparseZoo with object detection support:
     ```
 </VersionInjector>
 
-### Image Classification
-
-Install DeepSparse, SparseML, and SparseZoo with image classification support:
+### Computer Vision: Image Classification
 
 <VersionInjector targetProduct={["deepsparse", "sparseml"]} targetVersion="==VERSION" prepend="==">
     ```bash
@@ -60,8 +57,6 @@ Install DeepSparse, SparseML, and SparseZoo with image classification support:
 
 ### Natural Language Processing
 
-Install DeepSparse, SparseML, and SparseZoo with image classification support:
-
 <VersionInjector targetProduct={["deepsparse", "sparseml"]} targetVersion="==VERSION" prepend="==">
     ```bash
     pip install deepsparse[transformers,server]==VERSION sparseml[transformers]==VERSION
@@ -70,6 +65,6 @@ Install DeepSparse, SparseML, and SparseZoo with image classification support:
 
 ## Product Specific Installation
 
-For more detailed installation instructions, please visit the following pages:
+For comprehensive installation guides and customization options, explore the dedicated pages for each product:
 
 <DocCardList />

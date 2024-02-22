@@ -1,26 +1,23 @@
 ---
 tags:
-- SparseZoo
-- NeuralMagic
-- Model Optimization
-- Deep Learning
+- sparsezoo
+- installation
+- model repository
+- pre-sparsified models
 keywords:
-- SparseZoo
-- NeuralMagic
-- Model Optimization
-- Pre-sparsified Models
-description: Step-by-step guide for installing NeuralMagic's SparseZoo.
+- SparseZoo installation
+- Neural Magic model repository
+description: Install SparseZoo, Neural Magic's repository of pre-sparsified models, or learn how to access it through SparseML and DeepSparse.
 sidebar_label: SparseZoo
 sidebar_position: 2
 ---
 
 # Installing SparseZoo
 
-Welcome to the SparseZoo installation guide. Here, you'll find instructions for various installation methods including PyPI and advanced options via GitHub.
-
-Generally, you will not need to install SparseZoo directly.
-Instead, you can install the SparseML or DeepSparse packages, which includes SparseZoo as a dependency.
-However, if you wish to install SparseZoo directly, you can utilize the information below.
+SparseZoo is Neural Magic's repository of pre-sparsified deep learning models across various domains (computer vision, NLP, etc.).
+The easiest way to access and use these models is through:
+- <b>SparseML:</b> For model optimization, integration into your training pipelines.
+- <b>DeepSparse:</b> For high-performance deployment of sparsified models.
 
 :::note
 The installation commands correspond to the version of SparseZoo you're viewing in the documentation.
@@ -30,22 +27,18 @@ The installation commands correspond to the version of SparseZoo you're viewing 
 
 ### Hardware Requirements
 
-- None
+- <b>CPU:</b> Intel, AMD, or ARM
 
 ### Software Requirements
 
-- OS
-  - Linux is supported and is tested across Ubuntu, CentOS, and RedHat distributions.
-  - MacOS is currently in beta.
-  - Windows is not supported at this time. However, Windows users can install DeepSparse via Docker or a virtual machine.
-- Python 3.8-3.11
-- ONNX versions 1.5.0-1.15.0, ONNX opset version 11 or higher.
+- <b>OS:</b> Linux (Ubuntu, CentOS, RedHat, etc.). MacOS (limited support)
+- <b>Python:</b> 3.8 - 3.11
 
 ## Installation
 
 ### PyPI
 
-To install the current version of SparseZoo via PyPI, use the following command:
+For the most common use case, install the current release version of SparseZoo using PyPi:
 
 <VersionInjector targetProduct="sparsezoo" targetVersion="==VERSION" prepend="==">
     ```bash
@@ -53,37 +46,23 @@ To install the current version of SparseZoo via PyPI, use the following command:
     ```
 </VersionInjector>
 
-### GitHub
+### GitHub (Advanced)
 
-For advanced users, installation from source code is available using the following command:
+For development purposes or advanced use cases, install directly from the GitHub repository:
 
 <VersionInjector targetProduct="sparsezoo" prepend="v" currentTag="main" ignoreNightly={true}>
     ```bash
-    pip install git+https://github.com/neuralmagic/sparsezoo.git@VERSION
+    pip install git+https://github.com/neuralmagic/sparsezoo.git@VERSION[dev]
     ```
 </VersionInjector>
 
-Alternatively, install from a locally cloned repository with these commands:
+Or from a locally cloned repository:
 
 <VersionInjector targetProduct="sparsezoo" prepend="tags/v" currentTag="main" ignoreNightly={true}>
     ```bash
     git clone https://github.com/neuralmagic/sparsezoo.git
     cd sparsezoo
     git checkout VERSION
-    pip install -e .
+    pip install -e .[dev]
     ```
 </VersionInjector>
-
-## Specialized Installations
-
-### Development
-
-For development purposes, this extra provides support for development tools.
-
-<VersionInjector targetProduct="sparsezoo[dev]" targetVersion="==VERSION" prepend="==">
-    ```bash
-    pip install sparsezoo[dev]==VERSION
-    ```
-</VersionInjector>
-
----
