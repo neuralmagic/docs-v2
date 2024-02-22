@@ -49,15 +49,11 @@ from deepsparse import TextGeneration
 pipeline = TextGeneration(
     "zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized"
 )
-result = pipeline("Neural Magic is")
+result = pipeline("Large language models are")
 print(result)
-
-# <output>
-# TODO: add output
-# </output>
 ```
 
-As seen in the output, the pipeline generates text based on the input prompt.
+The output will show the generated text based on the input prompt.
 
 ### Server
 
@@ -68,12 +64,8 @@ To create a DeepSparse TextGeneration server that will run on port 5543 (default
 
 ```bash
 deepsparse.server \
-  "zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized" \
-  --integration openai
-
-# <output>
-# TODO: add output
-# </output>
+  --integration openai \
+  "zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized"
 ```
 
 Now with the server running, you can send an HTTP request that conforms to the OpenAI spec to generate text.
@@ -95,10 +87,6 @@ Below are examples for using `curl` and `python` to send a request to the server
         )
         for token in completion:
             print(token)
-
-        # <output>
-        # TODO: add output
-        # </output>
         ```
 
     </TabItem>
@@ -113,16 +101,12 @@ Below are examples for using `curl` and `python` to send a request to the server
             "messages": "Neural Magic is",
             "stream": true
         }'
-
-        # <output>
-        # TODO: add output
-        # </output>
         ```
 
     </TabItem>
 </Tabs>
 
-As seen in the output, the server generates text based on the input prompt.
+The output will show the generated text from the server based on the input prompt.
 
 ### Performance
 
@@ -138,7 +122,7 @@ The sections below are optional and can be skipped.
     To compare the performance of the sparsified model, we utilize a baseline, unoptimized version of the model from the SparseZoo.
     The stub for the corresponding model is:
     ```text
-    zoo:llama2-7b-ultrachat200k_llama2_pretrain-base
+    zoo:llama2-7b-llama2_pretrain-base
     ```
 
     The following command utilizes the baseline stub and DeepSparse to establish the unoptimized model's performance:
@@ -149,29 +133,21 @@ The sections below are optional and can be skipped.
             ```python
             from deepsparse.benchmark import benchmark_model
 
-            result = benchmark_model("zoo:llama2-7b-ultrachat200k_llama2_pretrain-base")
+            result = benchmark_model("zoo:llama2-7b-llama2_pretrain-base")
             print(result)
-
-            # <output>
-            # TODO: add output
-            # </output>
             ```
 
         </TabItem>
         <TabItem value="bash" label="Bash">
 
             ```bash
-            deepsparse.benchmark "zoo:llama2-7b-ultrachat200k_llama2_pretrain-base"
-
-            # <output>
-            # TODO: add output
-            # </output>
+            deepsparse.benchmark "zoo:llama2-7b-llama2_pretrain-base"
             ```
 
         </TabItem>
     </Tabs>
 
-    As seen in the output, the baseline model achieves a throughput of `x` tokens per second on a 4-core Intel CPU.
+    On an 8-core AMD CPU, the baseline model achieves a throughput around `2.7` tokens per second.
 </details>
 
 The following command utilizes the sparsified model and DeepSparse to establish the optimized model's performance:
@@ -181,29 +157,21 @@ The following command utilizes the sparsified model and DeepSparse to establish 
         ```python
         from deepsparse import benchmark
 
-        result = benchmark("zoo:llama2-7b-ultrachat200k_llama2_pretrain-base")
+        result = benchmark("zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized")
         print(result)
-
-        # <output>
-        # TODO: add output
-        # </output>
         ```
 
     </TabItem>
     <TabItem value="bash" label="Bash">
 
         ```bash
-        deepsparse.benchmark "zoo:llama2-7b-ultrachat200k_llama2_pretrain-base"
-
-        # <output>
-        # TODO: add output
-        # </output>
+        deepsparse.benchmark "zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized"
         ```
 
     </TabItem>
 </Tabs>
 
-As seen in the output, the sparsified model achieves a throughput of `y` tokens per second on the same CPU, which is `z` times faster than the baseline model!
+On an 8-core AMD CPU, the sparsified model achieves a throughput around `13.1` tokens per second, which is `4.9` times faster than the baseline model!
 
 #### Accuracy
 
