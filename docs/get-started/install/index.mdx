@@ -32,7 +32,7 @@ Before installation, ensure your system meets the requirements for [DeepSparse](
 
 Install DeepSparse, SparseML, and SparseZoo with generative AI support:
 
-<VersionInjector targetVersion="==VERSION" prepend="==">
+<VersionInjector targetProduct={["deepsparse", "sparseml"]} targetVersion="==VERSION" prepend="==">
 ```bash
 pip install deepsparse[llm,server]==VERSION sparseml[llm]==VERSION
 ```
@@ -42,7 +42,7 @@ pip install deepsparse[llm,server]==VERSION sparseml[llm]==VERSION
 
 Install DeepSparse, SparseML, and SparseZoo with object detection support:
 
-<VersionInjector targetVersion="==VERSION" prepend="==">
+<VersionInjector targetProduct={["deepsparse", "sparseml"]} targetVersion="==VERSION" prepend="==">
     ```bash
     pip install deepsparse[yolov8,server]==VERSION sparseml[yolov8]==VERSION
     ```
@@ -52,7 +52,7 @@ Install DeepSparse, SparseML, and SparseZoo with object detection support:
 
 Install DeepSparse, SparseML, and SparseZoo with image classification support:
 
-<VersionInjector targetVersion="==VERSION" prepend="==">
+<VersionInjector targetProduct={["deepsparse", "sparseml"]} targetVersion="==VERSION" prepend="==">
     ```bash
     pip install deepsparse[torchvision,server]==VERSION sparseml[torchvision]==VERSION
     ```
@@ -62,7 +62,7 @@ Install DeepSparse, SparseML, and SparseZoo with image classification support:
 
 Install DeepSparse, SparseML, and SparseZoo with image classification support:
 
-<VersionInjector targetVersion="==VERSION" prepend="==">
+<VersionInjector targetProduct={["deepsparse", "sparseml"]} targetVersion="==VERSION" prepend="==">
     ```bash
     pip install deepsparse[transformers,server]==VERSION sparseml[transformers]==VERSION
     ```
