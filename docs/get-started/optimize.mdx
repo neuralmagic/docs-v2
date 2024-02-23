@@ -80,7 +80,7 @@ The recipe specifies using the SparseGPTModifier to apply 50% sparsity and quant
 
         ```python
         from sparseml.transformers import (
-        SparseAutoModelForCausalLM, SparseAutoTokenizer, load_dataset, compress
+            SparseAutoModelForCausalLM, SparseAutoTokenizer, load_dataset, compress
         )
 
         model = SparseAutoModelForCausalLM.from_pretrained("meta-llama/Llama-2-7b-chat")
@@ -89,20 +89,20 @@ The recipe specifies using the SparseGPTModifier to apply 50% sparsity and quant
 
         recipe = """
         compression_stage:
-        run_type: oneshot
-        modifiers:
-        - !SparseGPTModifier
-        sparsity: 0.5
-        quantize: True
-        targets: [model.layers.0, model.layers.1, model.layers.2, model.layers.3, model.layers.4, model.layers.5, model.layers.6, model.layers.7, model.layers.8, model.layers.9, model.layers.10, model.layers.11, model.layers.12, model.layers.13, model.layers.14, model.layers.15, model.layers.16, model.layers.17, model.layers.18, model.layers.19, model.layers.20, model.layers.21, model.layers.22, model.layers.23, model.layers.24, model.layers.25, model.layers.26, model.layers.27, model.layers.28, model.layers.29, model.layers.30, model.layers.31, lm_head]
+            run_type: oneshot
+            modifiers:
+                - !SparseGPTModifier
+                    sparsity: 0.5
+                    quantize: True
+                    targets: [model.layers.0, model.layers.1, model.layers.2, model.layers.3, model.layers.4, model.layers.5, model.layers.6, model.layers.7, model.layers.8, model.layers.9, model.layers.10, model.layers.11, model.layers.12, model.layers.13, model.layers.14, model.layers.15, model.layers.16, model.layers.17, model.layers.18, model.layers.19, model.layers.20, model.layers.21, model.layers.22, model.layers.23, model.layers.24, model.layers.25, model.layers.26, model.layers.27, model.layers.28, model.layers.29, model.layers.30, model.layers.31, lm_head]
         """
 
         compress(
-        model=model,
-        tokenizer=tokenizer,
-        dataset=dataset,
-        modifiers=modifier,
-        output_dir="./one-shot-example",
+            model=model,
+            tokenizer=tokenizer,
+            dataset=dataset,
+            modifiers=modifier,
+            output_dir="./one-shot-example",
         )
         ```
 
@@ -113,12 +113,12 @@ The recipe specifies using the SparseGPTModifier to apply 50% sparsity and quant
         ```bash
         echo "
         compression_stage:
-        run_type: oneshot
-        modifiers:
-        - !SparseGPTModifier
-        sparsity: 0.5
-        quantize: True
-        targets: [model.layers.0, model.layers.1, model.layers.2, model.layers.3, model.layers.4, model.layers.5, model.layers.6, model.layers.7, model.layers.8, model.layers.9, model.layers.10, model.layers.11, model.layers.12, model.layers.13, model.layers.14, model.layers.15, model.layers.16, model.layers.17, model.layers.18, model.layers.19, model.layers.20, model.layers.21, model.layers.22, model.layers.23, model.layers.24, model.layers.25, model.layers.26, model.layers.27, model.layers.28, model.layers.29, model.layers.30, model.layers.31, lm_head]
+            run_type: oneshot
+            modifiers:
+                - !SparseGPTModifier
+                    sparsity: 0.5
+                    quantize: True
+                    targets: [model.layers.0, model.layers.1, model.layers.2, model.layers.3, model.layers.4, model.layers.5, model.layers.6, model.layers.7, model.layers.8, model.layers.9, model.layers.10, model.layers.11, model.layers.12, model.layers.13, model.layers.14, model.layers.15, model.layers.16, model.layers.17, model.layers.18, model.layers.19, model.layers.20, model.layers.21, model.layers.22, model.layers.23, model.layers.24, model.layers.25, model.layers.26, model.layers.27, model.layers.28, model.layers.29, model.layers.30, model.layers.31, lm_head]
         " > one-shot.yaml
 
         sparseml.transformers.compress \
@@ -148,9 +148,9 @@ After running the above code, the model is pruned and quantized, resulting in a 
             from sparseml import evaluate
 
             evaluate(
-            "./one-shot-example",
-            datasets="openai_humaneval",
-            integration="perplexity"
+                "./one-shot-example",
+                datasets="openai_humaneval",
+                integration="perplexity"
             )
             ```
 
@@ -159,9 +159,9 @@ After running the above code, the model is pruned and quantized, resulting in a 
 
             ```bash
             sparseml.evaluate \
-            "./one-shot-example" \
-            --datasets "openai_humaneval" \
-            --integration "perplexity"
+                "./one-shot-example" \
+                --datasets "openai_humaneval" \
+                --integration "perplexity"
             ```
 
         </TabItem>
@@ -195,10 +195,10 @@ SparseML provides a simple export command to do so:
         from sparseml import export
 
         export(
-        "zoo:mistral-7b-open_platypus_orca_mistral_pretrain-pruned50_quantized",
-        task="text-generation",
-        sequence_length=1024,
-        target_path="./exported"
+            "zoo:mistral-7b-open_platypus_orca_mistral_pretrain-pruned50_quantized",
+            task="text-generation",
+            sequence_length=1024,
+            target_path="./exported"
         )
         ```
 
@@ -207,10 +207,10 @@ SparseML provides a simple export command to do so:
 
         ```bash
         sparseml.export \
-        "zoo:mistral-7b-open_platypus_orca_mistral_pretrain-pruned50_quantized" \
-        --task "text-generation" \
-        --sequence_length 1024 \
-        --target_path "./exported"
+            "zoo:mistral-7b-open_platypus_orca_mistral_pretrain-pruned50_quantized" \
+            --task "text-generation" \
+            --sequence_length 1024 \
+            --target_path "./exported"
         ```
 
     </TabItem>
