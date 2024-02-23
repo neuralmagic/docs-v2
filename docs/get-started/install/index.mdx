@@ -23,15 +23,29 @@ We provide streamlined installation commands for common use cases and links for 
 ## Prerequisites
 
 Ensure your system meets the following requirements before proceeding with the installation based on your use case:
-- [DeepSparse](./deepsparse#prerequisites)
-- [SparseML](./sparseml#prerequisites)
-- [SparseZoo](./sparsezoo#prerequisites)
+
+### Deployment Hardware Requirements
+
+- <b>CPU</b>: x86 with AVX2 instructions (Intel Haswell or newer, AMD Zen 2 or newer) or ARM v8.2 or newer.
+- <b>RAM</b>: Minimum 1GB (model and configuration dependent)
+
+### Training Hardware Requirements
+
+- <b>CPU:</b> Intel, AMD, or ARM
+- <b>RAM:</b> 4GB+ recommended (depends on your models and workflows)
+- <b>GPU:</b> NVIDIA (recommended, 16GB+ VRAM); AMD (limited support)
+
+### Software Requirements
+
+- <b>OS:</b> Linux (Ubuntu, CentOS, RedHat, etc.). MacOS (limited support)
+- <b>Python:</b> 3.8 - 3.11
+- <b>PyTorch:</b> >= 1.1.0, < 2.2
 
 ## Task-Specific Installation
 
 Choose the installation command tailored to your primary deep learning task.
 
-### Generative AI: LLMs
+### LLMs - Causal Language Modeling
 
 <VersionInjector targetProduct={["deepsparse", "sparseml"]} targetVersion="==VERSION" prepend="==">
 ```bash

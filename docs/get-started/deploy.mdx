@@ -25,8 +25,9 @@ This guide focuses on the deployment of LLMs for text-generation tasks. You'll l
 
 ## Prerequisites
 
-- Ensure you've installed the required packages and dependencies for Generative AI as outlined in the [Install Guide](./install#generative-ai).
-- Familiarity with ML model deployment through Python and HTTP APIs.
+- <b>Deployment Environment:</b> A system that meets the minimum hardware and software requirements as outlined in the [Install Guide](./install/#prerequisites).
+- <b>DeepSparse LLM Installation:</b> An environment with DeepSparse for LLMs installed as outlined in the [Install Guide](./install#llms---causal-language-modeling).
+- <b>Background:</b> Familiarity with Generative AI and deploying ML models through Python and HTTP APIs is recommended.
 
 ## Deploying a Sparsified Llama Model
 
@@ -184,9 +185,9 @@ The following command utilizes the sparsified model and DeepSparse to establish 
         from deepsparse import evaluate
 
         result = evaluate(
-        "zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized",
-        datasets="openai_humaneval",
-        integration="perplexity"
+            "zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized",
+            datasets="openai_humaneval",
+            integration="perplexity"
         )
         print(result)
         ```
@@ -196,9 +197,9 @@ The following command utilizes the sparsified model and DeepSparse to establish 
 
         ```bash
         deepsparse.evaluate \
-        "zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized" \
-        --datasets "openai_humaneval" \
-        --integration "perplexity"
+            "zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized" \
+            --datasets "openai_humaneval" \
+            --integration "perplexity"
         ```
 
     </TabItem>
