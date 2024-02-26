@@ -146,15 +146,15 @@ The code below demonstrates applying one-shot pruning, followed by finetuning wi
                     targets: [model.layers.0, model.layers.1, model.layers.2, model.layers.3, model.layers.4, model.layers.5, model.layers.6, model.layers.7, model.layers.8, model.layers.9, model.layers.10, model.layers.11, model.layers.12, model.layers.13, model.layers.14, model.layers.15, model.layers.16, model.layers.17, model.layers.18, model.layers.19, model.layers.20, model.layers.21, model.layers.22, model.layers.23, model.layers.24, model.layers.25, model.layers.26, model.layers.27, model.layers.28, model.layers.29, model.layers.30, model.layers.31, lm_head]
 
         finetune_stage:
-        run_type: train
-        modifiers:
-            - ConstantPruningModifier:
-                targets: ["re:.*q_proj.weight", "re:.*k_proj.weight", "re:.*v_proj.weight", "re:.*o_proj.weight", "re:.*gate_proj.weight", "re:.*up_proj.weight", "re:.*down_proj.weight"]
-                start: 0
-            - OutputDistillationModifier:
-                targets: ["re:model.layers.\\d+$"]
-                comparison: "square_head"
-                start: 0
+            run_type: train
+            modifiers:
+                - ConstantPruningModifier:
+                    targets: ["re:.*q_proj.weight", "re:.*k_proj.weight", "re:.*v_proj.weight", "re:.*o_proj.weight", "re:.*gate_proj.weight", "re:.*up_proj.weight", "re:.*down_proj.weight"]
+                    start: 0
+                - OutputDistillationModifier:
+                    targets: ["re:model.layers.\\d+$"]
+                    comparison: "square_head"
+                    start: 0
 
         quantization_stage:
             run_type: oneshot
@@ -190,9 +190,9 @@ After running the above code, the model is pruned to 70% sparsity, fine-tuned, a
             from sparseml import evaluate
 
             evaluate(
-            "./one-shot-example",
-            datasets="openai_humaneval",
-            integration="perplexity"
+                "./finetune-example",
+                datasets="openai_humaneval",
+                integration="perplexity"
             )
             ```
 
@@ -201,9 +201,9 @@ After running the above code, the model is pruned to 70% sparsity, fine-tuned, a
 
             ```bash
             sparseml.evaluate \
-            "./one-shot-example" \
-            --datasets "openai_humaneval" \
-            --integration "perplexity"
+                "./one-shot-example" \
+                --datasets "openai_humaneval" \
+                --integration "perplexity"
             ```
 
         </TabItem>
@@ -217,7 +217,7 @@ To test the model's generation capabilities, we can use the following code to ge
 ```python
 from sparseml.transformers import SparseAutoModelForCausalLM, SparseAutoTokenizer
 
-model_path = "./one-shot-example"
+model_path = "./finetune-example"
 model = SparseAutoModelForCausalLM.from_pretrained(model_path)
 tokenizer = SparseAutoTokenizer.from_pretrained(model_path)
 inputs = tokenizer(["Large language models are"], return_tensors="pt")

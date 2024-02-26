@@ -1,50 +1,57 @@
 ---
 tags:
-- Sparsification
-- Large Language Models
-- Generative AI
+- finetuning
+- optimization
+- llm
+- sparsezoo
+- performance
+- neural magic
 keywords:
+- LLM finetuning
 - SparseML
-- SparseZoo
-- DeepSparse
-- LLM Sparsification
-description: This guide provides an overview of applying sparsification techniques to large language models using SparseML, with examples leveraging SparseZoo for model selection and DeepSparse for efficient inference.
+- efficient inference
+- sparse transfer learning
+description: Adapt large language models (LLMs) to new domains and tasks using sparse transfer learning with Neural Magic's SparseML. Maintain accuracy while optimizing for efficiency.
 sidebar_label: Sparse Transfer
 sidebar_position: 4
 ---
 
-# Sparsify
+# Sparse Transfering LLMs
 
-This section provides a technical overview of getting started with sparsifying neural networks to improve inference performance, specifically LLMs, using Neural Magic's SparseML for model optimization, SparseZoo for pre-trained models, and DeepSparse for accelerated inference.
+This guide focuses on adapting large language models (LLMs) to new domains and tasks using sparse transfer learning.
+By leveraging a pre-sparsified model's structure, you can efficiently finetune on new data, leading to reduced hyperparameter tuning, training times, and computational costs.
 
-## Causal Language Modeling - LLMs
+You'll learn how to:
 
-:::note
-Ensure you have the necessary packages installed for Generative AI as outlined in the [Install Guide](./install#generative-ai).
-:::
+- <b>Adapt to New Domains:</b> Transfer knowledge from a pre-sparsified LLM to excel in particular domains or use cases.
+- <b>Quantize for Efficiency:</b> Apply one-shot quantization to the model to further optimize for efficient inference.
 
-Sparsifying LLMs involves the use of SparseML to apply pruning and quantization techniques, enhancing model efficiency without significant losses in performance and leveraging DeepSparse for efficient inference on CPUs.
+## Prerequisites
 
-The examples below demonstrate the process of sparsifying a Mistral 7b model from Hugging Face's model hub:
+- <b>Training Environment:</b> A system that meets the minimum hardware and software requirements as outlined in the [Install Guide](./install/#prerequisites).
+- <b>SparseML LLM Installation:</b> An environment with DeepSparse for LLMs installed as outlined in the [Install Guide](./install#llms---causal-language-modeling).
+- <b>Background:</b> Familiarity with Generative AI and working with large language models is recommended.
+
+## Sparse Transfering a Llama Model
+
+We'll use a pre-sparsified 7b Llama 2 instruction tuning model from the SparseZoo finetuned on the OpenPlatypus dataset.
+The model is referenced by the following SparseZoo stub:
 ```text
-mistralai/Mistral-7B-Instruct-v0.2
+zoo:llama2-7b-open_platypus_orca_llama2_pretrain-pruned60
 ```
-
-For additional models, explore the [Generative AI models in the SparseZoo](https://sparsezoo.neuralmagic.com/?modelSet=generative_ai).
 
 ### Data Preparation
 
-SparseML requires a dataset to be used for both one shot methods and fine-tuning.
-The dataset is used in one shot as a calibration set and in finetuning as a training set.
+A dataset is required for transferring the pre-sparsified model's structure.
+For this example, we'll use the Helpful Instructions dataset from the HuggingFace H4 team, which is available in the Hugging Face dataset hub and can be loaded as follows:
 
-For the examples below, we use the Open Platypus dataset, which is available in the Hugging Face dataset hub:
 <Tabs>
     <TabItem value="python" label="Python" default>
 
         ```python
         from datasets import load_dataset
 
-        dataset = load_dataset("garage-bAInd/Open-Platypus")
+        dataset = load_dataset("HuggingFaceH4/helpful_instructions")
         ```
 
     </TabItem>
@@ -52,197 +59,103 @@ For the examples below, we use the Open Platypus dataset, which is available in 
     <TabItem value="bash" label="Bash" default>
 
         ```bash
-        --dataset "garage-bAInd/Open-Platypus"
+        --dataset "HuggingFaceH4/helpful_instructions"
         ```
 
     </TabItem>
 </Tabs>
 
-Replace the dataset with your own dataset or use the provided example.
-The simplest way is to use either a Hugging Face dataset or a list of tokenized examples as shown below:
+For comprehensive data preparation guidelines, including formats like CSV and JSONL, refer to our [detailed datasets guide](../llms/data).
 
-```python
-from sparseml.transformers import SparseAutoTokenizer
+### Sparse Transfer
 
-tokenizer = SparseAutoTokenizer.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
-samples = [
-    "The platypus is a mammal.",
-    "The platypus lays eggs.",
-    "The platypus is venomous."
-]
-dataset = [tokenizer(sample, return_tensors="pt") for sample in samples]
-```
+Creating sparse models from scratch can be time-consuming and computationally expensive.
+Sparse transfer learning, however, allows you to leverage pre-sparsified models to adapt to new domains and tasks efficiently without extensive training.
+As in the one-shot and finetuning guides, we'll use a recipe and the `compress` command in SparseML to the pre-sparsified model from the SparseZoo.
 
-For comprehensive data preparation guidelines including formats like CSV and JSONL, refer to our [detailed datasets guide](../generative-ai/causal-language-modeling/data).
+The code below demonstrates finetuning the model while preserving the sparsity and at the end, one-shot quantization to the Llama model utilizing a recipe:
 
-### One Shot
 
-Applying pruning and quantization to a SparseGPT model in one shot is a simple and quick process utilizing SparseML resulting in smaller, faster, and more efficient models.
-To do so, we construct the model, dataset, and utilize SparseML to apply Modifiers to the model which apply SOTA pruning and quantization techniques:
 <Tabs>
     <TabItem value="python" label="Python" default>
 
         ```python
         from sparseml.transformers import (
-            SparseAutoModelForCausalLM, SparseAutoTokenizer, load_dataset, apply
+            SparseAutoModelForCausalLM, SparseAutoTokenizer, load_dataset, compress
         )
-        from sparseml.modifiers import SparseGPTModifier
 
-        model = SparseAutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
-        tokenizer = SparseAutoTokenizer.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
-        dataset = load_dataset("garage-bAInd/Open-Platypus")
-
-        modifier = SparseGPTModifier(
-            sparsity=0.5,
-            quantize=True,
+        model = SparseAutoModelForCausalLM.from_pretrained(
+            "zoo:llama2-7b-open_platypus_orca_llama2_pretrain-pruned60"
         )
-        apply(
+        tokenizer = SparseAutoTokenizer.from_pretrained(
+            "zoo:llama2-7b-open_platypus_orca_llama2_pretrain-pruned60"
+        )
+        dataset = load_dataset("HuggingFaceH4/helpful_instructions")
+
+        recipe = """
+        finetune_stage:
+            run_type: train
+            modifiers:
+                - ConstantPruningModifier:
+                    targets: ["re:.*q_proj.weight", "re:.*k_proj.weight", "re:.*v_proj.weight", "re:.*o_proj.weight", "re:.*gate_proj.weight", "re:.*up_proj.weight", "re:.*down_proj.weight"]
+                    start: 0
+
+        quantization_stage:
+            run_type: oneshot
+            modifiers:
+                - SparseGPTModifier
+                    quantize: True
+                    targets: [model.layers.0, model.layers.1, model.layers.2, model.layers.3, model.layers.4, model.layers.5, model.layers.6, model.layers.7, model.layers.8, model.layers.9, model.layers.10, model.layers.11, model.layers.12, model.layers.13, model.layers.14, model.layers.15, model.layers.16, model.layers.17, model.layers.18, model.layers.19, model.layers.20, model.layers.21, model.layers.22, model.layers.23, model.layers.24, model.layers.25, model.layers.26, model.layers.27, model.layers.28, model.layers.29, model.layers.30, model.layers.31, lm_head]
+        """
+
+        compress(
             model=model,
             tokenizer=tokenizer,
             dataset=dataset,
-            modifiers=modifier,
-            output_dir="./one-shot-example",
+            recipe=recipe,
+            output_dir="./transfer-example"
         )
-
-        # <output>
-        # TODO
-        # </output>
         ```
 
     </TabItem>
-
-    <TabItem value="bash" label="Bash" default>
-
-        ```bash
-        echo "
-        modifiers:
-            SparseGPTModifier
-                sparsity: 0.5
-                quantize: True
-        " > one-shot.yaml
-
-        sparseml.transformers.text_generation.apply \
-            --model "mistralai/Mistral-7B-Instruct-v0.2" \
-            --tokenizer "mistralai/Mistral-7B-Instruct-v0.2" \
-            --dataset "garage-bAInd/Open-Platypus" \
-            --recipe "./one-shot.yaml" \
-            --output-dir "./one-shot-example"
-
-        # <output>
-        # TODO
-        # </output>
-        ```
-
-    </TabItem>
-</Tabs>
-
-As seen in the output summary, the model is pruned and quantized, resulting in a smaller and faster model.
-If you want to improve the accuracy of the model, use the [fine-tuning](#one-shot-with-finetuning) method.
-Otherwise, the model is ready for efficient inference and dive into the [inference](#inference) section for next steps.
-
-### One Shot with Finetuning
-
-After pruning the model, finetuning can help in retaining performance post-sparsification.
-To enable this, we use the same model, dataset, and SparseML to apply Modifiers in stages to the model.
-Specifically, we first apply pruning in one shot, then finetuning the model on the same dataset, and finally apply quantization in one shot.
-The process is as follows:
-<Tabs>
-    <TabItem value="python" label="Python" default>
-
-        ```python
-        from sparseml.transformers import (
-            SparseAutoModelForCausalLM, SparseAutoTokenizer, load_dataset, apply
-        )
-        from sparseml.modifiers import SparseGPTModifier, TrainingModifier
-        from sparseml.core import RecipeStage
-
-        model = SparseAutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
-        tokenizer = SparseAutoTokenizer.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
-        dataset = load_dataset("garage-bAInd/Open-Platypus")
-
-        modifiers = [
-            RecipeStage(
-                modifiers=[
-                    SparseGPTModifier(sparsity=0.5)
-                ]
-            ),
-            RecipeStage(
-                modifiers=[
-                    TrainingModifier(epochs=2),
-                    ConstantPruningModifier(),
-                ]
-            ),
-            RecipeStage(
-                modifiers=[
-                    SparseGPTModifier(quantize=True)
-                ]
-            ),
-        ]
-        apply(
-            model=model,
-            tokenizer=tokenizer,
-            dataset=dataset,
-            modifiers=modifiers,
-            output_dir="./one-shot-finetune-example",
-        )
-
-        # <output>
-        # TODO
-        # </output>
-        ```
-
-    </TabItem>
-
     <TabItem value="bash" label="Bash">
 
         ```bash
         echo "
-        pruning_stage:
-            modifiers:
-                - !SparseGPTModifier
-                    sparsity: 0.5
         finetune_stage:
+            run_type: train
             modifiers:
-                TrainingModifier:
-                    epochs: 2
-                ConstantPruningModifier:
+                - ConstantPruningModifier:
+                    targets: ["re:.*q_proj.weight", "re:.*k_proj.weight", "re:.*v_proj.weight", "re:.*o_proj.weight", "re:.*gate_proj.weight", "re:.*up_proj.weight", "re:.*down_proj.weight"]
                     start: 0
-        quantize_stage:
+
+        quantization_stage:
+            run_type: oneshot
             modifiers:
-                - !SparseGPTModifier
+                - SparseGPTModifier
                     quantize: True
-        " > one-shot-finetune.yaml
+                    targets: [model.layers.0, model.layers.1, model.layers.2, model.layers.3, model.layers.4, model.layers.5, model.layers.6, model.layers.7, model.layers.8, model.layers.9, model.layers.10, model.layers.11, model.layers.12, model.layers.13, model.layers.14, model.layers.15, model.layers.16, model.layers.17, model.layers.18, model.layers.19, model.layers.20, model.layers.21, model.layers.22, model.layers.23, model.layers.24, model.layers.25, model.layers.26, model.layers.27, model.layers.28, model.layers.29, model.layers.30, model.layers.31, lm_head]
+        " > transfer.yaml
 
         sparseml.transformers.text_generation.apply \
-            --model "mistralai/Mistral-7B-Instruct-v0.2" \
-            --tokenizer "mistralai/Mistral-7B-Instruct-v0.2" \
-            --dataset "garage-bAInd/Open-Platypus" \
-            --recipe "./one-shot-finetune.yaml" \
-            --output-dir "./one-shot-finetune-example"
-
-        # <output>
-        # TODO
-        # </output>
+            --model "zoo:llama2-7b-open_platypus_orca_llama2_pretrain-pruned60" \
+            --data "HuggingFaceH4/helpful_instructions" \
+            --recipe ./transfer.yaml \
+            --output_dir "./transfer-example"
         ```
 
     </TabItem>
 </Tabs>
 
-As seen in the output, the model is pruned and quantized while retaining better perplexity.
-The model is now ready for efficient inference and can be used in the [inference](#inference) section for next steps.
+After running the above code, the model is transferred to the Helpful Instructions dataset with 60% sparsity and quantization, resulting in a smaller model ready for efficient inference.
 
 ### Inference
-
-:::note
-Be sure to replace the sample models provided below with the models you have sparsified.
-A sample, sparsified Mistral model from the SparseZoo is used by default.
-:::
 
 <details>
     <summary>Evaluating Accuracy</summary>
 
-    It is important to evaluate the accuracy of the model to ensure it meets the desired performance requirements.
-    To do so, we can use the following code to evaluate the model across a number of benchmarks available in the `lm-eval-harness`:
+    Evaluating the model's accuracy is important to ensure it meets the desired performance requirements.
+    To do so, we can use the following code to evaluate the model's perplexity on a sample dataset:
     <Tabs>
         <TabItem value="python" label="Python" default>
 
@@ -250,13 +163,10 @@ A sample, sparsified Mistral model from the SparseZoo is used by default.
             from sparseml import evaluate
 
             evaluate(
-                "zoo:mistral-7b-open_platypus_orca_mistral_pretrain-pruned50_quantized",
-                integration="lm-eval-harness"
+                "./transfer-example",
+                datasets="openai_humaneval",
+                integration="perplexity"
             )
-
-            # <output>
-            # TODO: add output
-            # </output>
             ```
 
         </TabItem>
@@ -264,12 +174,9 @@ A sample, sparsified Mistral model from the SparseZoo is used by default.
 
             ```bash
             sparseml.evaluate \
-                "zoo:mistral-7b-open_platypus_orca_mistral_pretrain-pruned50_quantized" \
-                --integration "lm-eval-harness"
-
-            # <output>
-            # TODO: add output
-            # </output>
+                "./transfer-example" \
+                --datasets "openai_humaneval" \
+                --integration "perplexity"
             ```
 
         </TabItem>
@@ -277,25 +184,25 @@ A sample, sparsified Mistral model from the SparseZoo is used by default.
 
 </details>
 
-After sparsifying the model, it can be used for inference in PyTorch with the following code:
+After sparsifying the model, it is ready for evaluation and deployment.
+To test the model's generation capabilities, we can use the following code to generate text utilizing PyTorch:
+
 ```python
 from sparseml.transformers import SparseAutoModelForCausalLM, SparseAutoTokenizer
 
-model_path = "zoo:mistral-7b-open_platypus_orca_mistral_pretrain-pruned50_quantized"
+model_path = "./transfer-example"
 model = SparseAutoModelForCausalLM.from_pretrained(model_path)
 tokenizer = SparseAutoTokenizer.from_pretrained(model_path)
 inputs = tokenizer(["Large language models are"], return_tensors="pt")
 generated_ids = model.generate(**inputs)
 outputs = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)
 print(outputs)
-
-# <output>
-# TODO
-# </output>
 ```
 
-The above code; however, does not leverage the sparsity within the model for efficient inference.
-To do so, we first export the model to ONNX and inject KV caching logic so that it is ready for efficient inference on CPUs with DeepSparse:
+The above code, however, does not leverage the sparsity within the model for efficient inference.
+To do so, we need to export the model to ONNX to be ready for efficient inference on CPUs with DeepSparse.
+SparseML provides a simple export command to do so:
+
 <Tabs>
     <TabItem value="python" label="Python" default>
 
@@ -303,15 +210,11 @@ To do so, we first export the model to ONNX and inject KV caching logic so that 
         from sparseml import export
 
         export(
-            "zoo:mistral-7b-open_platypus_orca_mistral_pretrain-pruned50_quantized",
+            "./transfer-example",
             task="text-generation",
             sequence_length=1024,
             target_path="./exported"
         )
-
-        # <output>
-        # TODO: add output
-        # </output>
         ```
 
     </TabItem>
@@ -319,27 +222,22 @@ To do so, we first export the model to ONNX and inject KV caching logic so that 
 
         ```bash
         sparseml.export \
-            "zoo:mistral-7b-open_platypus_orca_mistral_pretrain-pruned50_quantized" \
+            "./transfer-example" \
             --task "text-generation" \
             --sequence_length 1024 \
             --target_path "./exported"
-
-        # <output>
-        # TODO: add output
-        # </output>
         ```
 
     </TabItem>
 </Tabs>
 
 The exported model located at `./exported` can now be used for efficient inference with DeepSparse.
-To do so, sub in the exported model within the [Getting Started - Deploy](../getting-started/deploy) guide for your desired deployment method.
+To do so, sub in the exported model within the previous [Getting Started - Deploy](./deploy) guide for your desired deployment method.
 
 ---
 
-Explore more on sparsification and efficient deployment of AI models across various domains with Neural Magic's suite:
+Want to dive into more about one-shot sparsification with Neural Magic? Here are a few paths to consider:
 
-- [Generative AI](../generative-ai)
-- [Computer Vision](../computer-vision)
-- [Natural Language Processing](../nlp)
-- [Custom Integrations](../custom-integrations)
+- <b>Specialize in LLMs:</b> Dive deeper into text generation techniques within our [LLMs section](../llms).
+- <b>Expand to Other Domains:</b> Explore how to optimize models for [Computer Vision](../computer-vision) or [Natural Language Processing](../nlp) tasks.
+- <b>Tailor to Your Needs:</b> Learn about flexible sparsification options in our [Custom Integrations section](../custom-integrations).
