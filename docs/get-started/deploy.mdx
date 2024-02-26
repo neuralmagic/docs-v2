@@ -77,19 +77,24 @@ Below are examples of using `curl` and `python` to send a request to the server:
     <TabItem value="python" label="Python" default>
 
         ```python
-        import openai
+        import requests
+        import json
 
-        openai.api_key = "EMPTY"
-        openai.api_base = "http://localhost:5543/v1"
+        url = "http://localhost:5543/v1/chat/completions"
+        headers = {"Content-Type": "application/json"}
+        data = {
+            "model": "zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized",
+            "messages": "Large language models are",
+            "stream": True
+        }
 
-        completion = openai.ChatCompletion.create(
-        messages="Neural Magic is",
-        stream=True,
-        max_tokens=30,
-        model="zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized",
-        )
-        for token in completion:
-        print(token)
+        response = requests.post(url, headers=headers, data=json.dumps(data))
+
+        if response.status_code == 200:
+            for chunk in response.iter_content(chunk_size=128):
+                print(chunk.decode('utf-8'))  # Decode and print each data chunk
+        else:
+            print("Request failed with status code:", response.status_code)
         ```
 
     </TabItem>
@@ -101,7 +106,7 @@ Below are examples of using `curl` and `python` to send a request to the server:
             -H "Content-Type: application/json" \
             -d '{
                 "model": "zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized",
-                "messages": "Neural Magic is",
+                "messages": "Large language models are",
                 "stream": true
             }'
         ```

@@ -284,7 +284,7 @@ from sparseml.transformers import SparseAutoModelForCausalLM, SparseAutoTokenize
 model_path = "zoo:mistral-7b-open_platypus_orca_mistral_pretrain-pruned50_quantized"
 model = SparseAutoModelForCausalLM.from_pretrained(model_path)
 tokenizer = SparseAutoTokenizer.from_pretrained(model_path)
-inputs = tokenizer(["Neural Magic is"], return_tensors="pt")
+inputs = tokenizer(["Large language models are"], return_tensors="pt")
 generated_ids = model.generate(**inputs)
 outputs = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)
 print(outputs)
