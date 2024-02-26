@@ -28,7 +28,7 @@ const processChildren = (child, currentVersion, targetVersion, targetProducts, p
         let replaced = child.replace(new RegExp(targetVersion, 'g'), version);
 
         for (let i = 0; i < products.length; i++) {
-            replaced = replaced.replace(new RegExp(targetProducts[i], 'g'), products[i]);
+            replaced = replaced.replace(new RegExp(targetProducts[i].replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), products[i]);
         }
 
         return replaced;
