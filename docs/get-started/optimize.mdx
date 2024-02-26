@@ -86,8 +86,8 @@ The recipe specifies using the SparseGPTModifier to apply 50% sparsity and quant
             SparseAutoModelForCausalLM, SparseAutoTokenizer, load_dataset, compress
         )
 
-        model = SparseAutoModelForCausalLM.from_pretrained("meta-llama/Llama-2-7b-chat")
-        tokenizer = SparseAutoTokenizer.from_pretrained("meta-llama/Llama-2-7b-chat")
+        model = SparseAutoModelForCausalLM.from_pretrained("zoo:llama2-7b-llama2_chat_llama2_pretrain-base")
+        tokenizer = SparseAutoTokenizer.from_pretrained("zoo:llama2-7b-llama2_chat_llama2_pretrain-base")
         dataset = load_dataset("garage-bAInd/Open-Platypus")
 
         recipe = """
@@ -125,11 +125,11 @@ The recipe specifies using the SparseGPTModifier to apply 50% sparsity and quant
         " > one-shot.yaml
 
         sparseml.transformers.text_generation.apply \
-        --model "meta-llama/Llama-2-7b-chat" \
-        --tokenizer "meta-llama/Llama-2-7b-chat" \
-        --dataset "garage-bAInd/Open-Platypus" \
-        --recipe "./one-shot.yaml" \
-        --output-dir "./one-shot-example"
+            --model "meta-llama/Llama-2-7b-chat" \
+            --tokenizer "meta-llama/Llama-2-7b-chat" \
+            --dataset "garage-bAInd/Open-Platypus" \
+            --recipe "./one-shot.yaml" \
+            --output-dir "./one-shot-example"
         ```
 
     </TabItem>
