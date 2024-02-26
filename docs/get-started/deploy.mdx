@@ -162,9 +162,9 @@ The following command utilizes the sparsified model and DeepSparse to establish 
     <TabItem value="python" label="Python" default>
 
         ```python
-        from deepsparse import benchmark
+        from deepsparse import benchmark_model
 
-        result = benchmark("zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized")
+        result = benchmark_model("zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized")
         print(result)
         ```
 
