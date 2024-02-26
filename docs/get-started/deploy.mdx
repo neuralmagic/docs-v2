@@ -98,12 +98,12 @@ Below are examples of using `curl` and `python` to send a request to the server:
 
         ```bash
         curl http://localhost:5543/v1/chat/completions \
-        -H "Content-Type: application/json" \
-        -d '{
-        "model": "zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized",
-        "messages": "Neural Magic is",
-        "stream": true
-    }'
+            -H "Content-Type: application/json" \
+            -d '{
+                "model": "zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized",
+                "messages": "Neural Magic is",
+                "stream": true
+            }'
         ```
 
     </TabItem>
