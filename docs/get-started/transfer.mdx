@@ -121,7 +121,7 @@ To do so, we construct the model, dataset, and utilize SparseML to apply Modifie
                 quantize: True
         " > one-shot.yaml
 
-        sparseml.transformers.apply \
+        sparseml.transformers.text_generation.apply \
             --model "mistralai/Mistral-7B-Instruct-v0.2" \
             --tokenizer "mistralai/Mistral-7B-Instruct-v0.2" \
             --dataset "garage-bAInd/Open-Platypus" \
@@ -213,7 +213,7 @@ The process is as follows:
                     quantize: True
         " > one-shot-finetune.yaml
 
-        sparseml.transformers.apply \
+        sparseml.transformers.text_generation.apply \
             --model "mistralai/Mistral-7B-Instruct-v0.2" \
             --tokenizer "mistralai/Mistral-7B-Instruct-v0.2" \
             --dataset "garage-bAInd/Open-Platypus" \
