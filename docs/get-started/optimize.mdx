@@ -94,7 +94,7 @@ The recipe specifies using the SparseGPTModifier to apply 50% sparsity and quant
         compression_stage:
             run_type: oneshot
             modifiers:
-                - SparseGPTModifier
+                SparseGPTModifier:
                     sparsity: 0.5
                     quantize: True
                     targets: [model.layers.0, model.layers.1, model.layers.2, model.layers.3, model.layers.4, model.layers.5, model.layers.6, model.layers.7, model.layers.8, model.layers.9, model.layers.10, model.layers.11, model.layers.12, model.layers.13, model.layers.14, model.layers.15, model.layers.16, model.layers.17, model.layers.18, model.layers.19, model.layers.20, model.layers.21, model.layers.22, model.layers.23, model.layers.24, model.layers.25, model.layers.26, model.layers.27, model.layers.28, model.layers.29, model.layers.30, model.layers.31, lm_head]
@@ -118,7 +118,7 @@ The recipe specifies using the SparseGPTModifier to apply 50% sparsity and quant
         compression_stage:
             run_type: oneshot
             modifiers:
-                - SparseGPTModifier
+                SparseGPTModifier:
                     sparsity: 0.5
                     quantize: True
                     targets: [model.layers.0, model.layers.1, model.layers.2, model.layers.3, model.layers.4, model.layers.5, model.layers.6, model.layers.7, model.layers.8, model.layers.9, model.layers.10, model.layers.11, model.layers.12, model.layers.13, model.layers.14, model.layers.15, model.layers.16, model.layers.17, model.layers.18, model.layers.19, model.layers.20, model.layers.21, model.layers.22, model.layers.23, model.layers.24, model.layers.25, model.layers.26, model.layers.27, model.layers.28, model.layers.29, model.layers.30, model.layers.31, lm_head]
@@ -129,7 +129,7 @@ The recipe specifies using the SparseGPTModifier to apply 50% sparsity and quant
             --tokenizer "meta-llama/Llama-2-7b-chat" \
             --dataset "garage-bAInd/Open-Platypus" \
             --recipe "./one-shot.yaml" \
-            --output-dir "./one-shot-example"
+            --output_dir "./one-shot-example"
         ```
 
     </TabItem>
