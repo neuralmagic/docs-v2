@@ -97,8 +97,9 @@ The code below demonstrates applying one-shot pruning, followed by finetuning, a
         dataset = load_dataset("garage-bAInd/Open-Platypus")
 
         def format_data(data):
-            data["text"] = data["instruction"] + data["output"]
-            return data
+            return {
+                "text": data["instruction"] + data["output"]
+            }
 
         dataset = dataset.map(format_data)
 
