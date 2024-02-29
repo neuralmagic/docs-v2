@@ -94,8 +94,9 @@ The code below demonstrates finetuning the model while preserving the sparsity a
         dataset = load_dataset("HuggingFaceH4/helpful_instructions")
 
         def format_data(data):
-            data["text"] = data["prompt"] + data["completion"]
-            return data
+            return {
+                "text": data["prompt"] + data["completion"]
+            }
 
         dataset = dataset.map(format_data)
 
