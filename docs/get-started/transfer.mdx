@@ -85,24 +85,47 @@ The code below demonstrates finetuning the model while preserving the sparsity a
         )
 
         model = SparseAutoModelForCausalLM.from_pretrained(
-            "zoo:llama2-7b-open_platypus_orca_llama2_pretrain-pruned60"
+            "zoo:llama2-7b-open_platypus_orca_llama2_pretrain-pruned60",
+            device_map="auto",
         )
         tokenizer = SparseAutoTokenizer.from_pretrained(
             "zoo:llama2-7b-open_platypus_orca_llama2_pretrain-pruned60"
         )
         dataset = load_dataset("HuggingFaceH4/helpful_instructions")
 
+        def format_data(data):
+            data["text"] = data["prompt"] + data["completion"]
+            return data
+
         recipe = """
         finetune_stage:
             run_type: train
-            constant_modifiers:
+            finetune_modifiers:
                 ConstantPruningModifier:
                     targets: ["re:.*q_proj.weight", "re:.*k_proj.weight", "re:.*v_proj.weight", "re:.*o_proj.weight", "re:.*gate_proj.weight", "re:.*up_proj.weight", "re:.*down_proj.weight"]
                     start: 0
 
         quantization_stage:
             run_type: oneshot
-            gpt_modifiers:
+            quantize_modifiers:
+                QuantizationModifier:
+                    ignore: [LlamaRotaryEmbedding, LlamaRMSNorm, SiLUActivation, MatMulOutput_QK, MatMulOutput_PV]
+                    post_oneshot_calibration: true
+                    scheme_overrides:
+                        Linear:
+                            weights:
+                                num_bits: 8
+                                symmetric: true
+                                strategy: channel
+                        MatMulLeftInput_QK:
+                            input_activations:
+                                num_bits: 8
+                                symmetric: true
+                        Embedding:
+                            input_activations: null
+                            weights:
+                                num_bits: 8
+                                symmetric: false
                 SparseGPTModifier:
                     quantize: True
                     targets: [model.layers.0, model.layers.1, model.layers.2, model.layers.3, model.layers.4, model.layers.5, model.layers.6, model.layers.7, model.layers.8, model.layers.9, model.layers.10, model.layers.11, model.layers.12, model.layers.13, model.layers.14, model.layers.15, model.layers.16, model.layers.17, model.layers.18, model.layers.19, model.layers.20, model.layers.21, model.layers.22, model.layers.23, model.layers.24, model.layers.25, model.layers.26, model.layers.27, model.layers.28, model.layers.29, model.layers.30, model.layers.31, lm_head]
@@ -112,6 +135,7 @@ The code below demonstrates finetuning the model while preserving the sparsity a
             model=model,
             tokenizer=tokenizer,
             dataset=dataset,
+            preprocessing_func=format_data,
             recipe=recipe,
             output_dir="./transfer-example"
         )
@@ -124,15 +148,33 @@ The code below demonstrates finetuning the model while preserving the sparsity a
         echo "
         finetune_stage:
             run_type: train
-            modifiers:
-                - ConstantPruningModifier:
+            finetune_modifiers:
+                ConstantPruningModifier:
                     targets: ["re:.*q_proj.weight", "re:.*k_proj.weight", "re:.*v_proj.weight", "re:.*o_proj.weight", "re:.*gate_proj.weight", "re:.*up_proj.weight", "re:.*down_proj.weight"]
                     start: 0
 
         quantization_stage:
             run_type: oneshot
-            modifiers:
-                - SparseGPTModifier
+            quantize_modifiers:
+                QuantizationModifier:
+                    ignore: [LlamaRotaryEmbedding, LlamaRMSNorm, SiLUActivation, MatMulOutput_QK, MatMulOutput_PV]
+                    post_oneshot_calibration: true
+                    scheme_overrides:
+                        Linear:
+                            weights:
+                                num_bits: 8
+                                symmetric: true
+                                strategy: channel
+                        MatMulLeftInput_QK:
+                            input_activations:
+                                num_bits: 8
+                                symmetric: true
+                        Embedding:
+                            input_activations: null
+                            weights:
+                                num_bits: 8
+                                symmetric: false
+                SparseGPTModifier:
                     quantize: True
                     targets: [model.layers.0, model.layers.1, model.layers.2, model.layers.3, model.layers.4, model.layers.5, model.layers.6, model.layers.7, model.layers.8, model.layers.9, model.layers.10, model.layers.11, model.layers.12, model.layers.13, model.layers.14, model.layers.15, model.layers.16, model.layers.17, model.layers.18, model.layers.19, model.layers.20, model.layers.21, model.layers.22, model.layers.23, model.layers.24, model.layers.25, model.layers.26, model.layers.27, model.layers.28, model.layers.29, model.layers.30, model.layers.31, lm_head]
         " > transfer.yaml
@@ -191,7 +233,7 @@ To test the model's generation capabilities, we can use the following code to ge
 from sparseml.transformers import SparseAutoModelForCausalLM, SparseAutoTokenizer
 
 model_path = "./transfer-example"
-model = SparseAutoModelForCausalLM.from_pretrained(model_path)
+model = SparseAutoModelForCausalLM.from_pretrained(model_path, device_map="auto")
 tokenizer = SparseAutoTokenizer.from_pretrained(model_path)
 inputs = tokenizer(["Large language models are"], return_tensors="pt")
 generated_ids = model.generate(**inputs)

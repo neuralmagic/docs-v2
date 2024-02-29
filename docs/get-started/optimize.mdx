@@ -86,14 +86,35 @@ The recipe specifies using the SparseGPTModifier to apply 50% sparsity and quant
             SparseAutoModelForCausalLM, SparseAutoTokenizer, load_dataset, compress
         )
 
-        model = SparseAutoModelForCausalLM.from_pretrained("zoo:llama2-7b-llama2_chat_llama2_pretrain-base")
+        model = SparseAutoModelForCausalLM.from_pretrained(
+            "zoo:llama2-7b-llama2_chat_llama2_pretrain-base",
+            device_map="auto"
+        )
         tokenizer = SparseAutoTokenizer.from_pretrained("zoo:llama2-7b-llama2_chat_llama2_pretrain-base")
         dataset = load_dataset("garage-bAInd/Open-Platypus")
 
         recipe = """
         compression_stage:
             run_type: oneshot
-            modifiers:
+            oneshot_modifiers:
+                QuantizationModifier:
+                    ignore: [LlamaRotaryEmbedding, LlamaRMSNorm, SiLUActivation, MatMulOutput_QK, MatMulOutput_PV]
+                    post_oneshot_calibration: true
+                    scheme_overrides:
+                        Linear:
+                            weights:
+                                num_bits: 8
+                                symmetric: true
+                                strategy: channel
+                        MatMulLeftInput_QK:
+                            input_activations:
+                                num_bits: 8
+                                symmetric: true
+                        Embedding:
+                            input_activations: null
+                            weights:
+                                num_bits: 8
+                                symmetric: false
                 SparseGPTModifier:
                     sparsity: 0.5
                     quantize: True
@@ -117,7 +138,25 @@ The recipe specifies using the SparseGPTModifier to apply 50% sparsity and quant
         echo "
         compression_stage:
             run_type: oneshot
-            modifiers:
+            oneshot_modifiers:
+                QuantizationModifier:
+                    ignore: [LlamaRotaryEmbedding, LlamaRMSNorm, SiLUActivation, MatMulOutput_QK, MatMulOutput_PV]
+                    post_oneshot_calibration: true
+                    scheme_overrides:
+                        Linear:
+                            weights:
+                                num_bits: 8
+                                symmetric: true
+                                strategy: channel
+                        MatMulLeftInput_QK:
+                            input_activations:
+                                num_bits: 8
+                                symmetric: true
+                        Embedding:
+                            input_activations: null
+                            weights:
+                                num_bits: 8
+                                symmetric: false
                 SparseGPTModifier:
                     sparsity: 0.5
                     quantize: True
@@ -179,7 +218,7 @@ To test the model's generation capabilities, we can use the following code to ge
 from sparseml.transformers import SparseAutoModelForCausalLM, SparseAutoTokenizer
 
 model_path = "./one-shot-example"
-model = SparseAutoModelForCausalLM.from_pretrained(model_path)
+model = SparseAutoModelForCausalLM.from_pretrained(model_path, device_map="auto")
 tokenizer = SparseAutoTokenizer.from_pretrained(model_path)
 inputs = tokenizer(["Large language models are"], return_tensors="pt")
 generated_ids = model.generate(**inputs)
