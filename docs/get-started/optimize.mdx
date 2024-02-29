@@ -93,6 +93,12 @@ The recipe specifies using the SparseGPTModifier to apply 50% sparsity and quant
         tokenizer = SparseAutoTokenizer.from_pretrained("zoo:llama2-7b-llama2_chat_llama2_pretrain-base")
         dataset = load_dataset("garage-bAInd/Open-Platypus")
 
+        def format_data(data):
+            data["text"] = data["instruction"] + data["output"]
+            return data
+
+        dataset = dataset.map(format_data)
+
         recipe = """
         compression_stage:
             run_type: oneshot
@@ -128,47 +134,6 @@ The recipe specifies using the SparseGPTModifier to apply 50% sparsity and quant
             recipe=recipe,
             output_dir="./one-shot-example",
         )
-        ```
-
-    </TabItem>
-
-    <TabItem value="bash" label="Bash" default>
-
-        ```bash
-        echo "
-        compression_stage:
-            run_type: oneshot
-            oneshot_modifiers:
-                QuantizationModifier:
-                    ignore: [LlamaRotaryEmbedding, LlamaRMSNorm, SiLUActivation, MatMulOutput_QK, MatMulOutput_PV]
-                    post_oneshot_calibration: true
-                    scheme_overrides:
-                        Linear:
-                            weights:
-                                num_bits: 8
-                                symmetric: true
-                                strategy: channel
-                        MatMulLeftInput_QK:
-                            input_activations:
-                                num_bits: 8
-                                symmetric: true
-                        Embedding:
-                            input_activations: null
-                            weights:
-                                num_bits: 8
-                                symmetric: false
-                SparseGPTModifier:
-                    sparsity: 0.5
-                    quantize: True
-                    targets: [model.layers.0, model.layers.1, model.layers.2, model.layers.3, model.layers.4, model.layers.5, model.layers.6, model.layers.7, model.layers.8, model.layers.9, model.layers.10, model.layers.11, model.layers.12, model.layers.13, model.layers.14, model.layers.15, model.layers.16, model.layers.17, model.layers.18, model.layers.19, model.layers.20, model.layers.21, model.layers.22, model.layers.23, model.layers.24, model.layers.25, model.layers.26, model.layers.27, model.layers.28, model.layers.29, model.layers.30, model.layers.31, lm_head]
-        " > one-shot.yaml
-
-        sparseml.transformers.text_generation.apply \
-            --model "meta-llama/Llama-2-7b-chat" \
-            --tokenizer "meta-llama/Llama-2-7b-chat" \
-            --dataset "garage-bAInd/Open-Platypus" \
-            --recipe "./one-shot.yaml" \
-            --output_dir "./one-shot-example"
         ```
 
     </TabItem>
