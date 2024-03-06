@@ -173,9 +173,10 @@ After running the above code, the model is pruned to 50% sparsity, fine-tuned, a
             from sparseml import evaluate
 
             evaluate(
-                "./finetune-example",
+                "./finetune-example/quantization_stage",
                 datasets="openai_humaneval",
-                integration="perplexity"
+                integration="perplexity",
+                text_column_name=["prompt", "canonical_solution"]
             )
             ```
 
@@ -184,7 +185,7 @@ After running the above code, the model is pruned to 50% sparsity, fine-tuned, a
 
             ```bash
             sparseml.evaluate \
-                "./one-shot-example" \
+                "./finetune-example/quantization_stage" \
                 --datasets "openai_humaneval" \
                 --integration "perplexity"
             ```
@@ -200,7 +201,7 @@ To test the model's generation capabilities, we can use the following code to ge
 ```python
 from sparseml.transformers import SparseAutoModelForCausalLM, SparseAutoTokenizer
 
-model_path = "./finetune-example"
+model_path = "./finetune-example/quantization_stage"
 model = SparseAutoModelForCausalLM.from_pretrained(model_path, device_map="auto")
 tokenizer = SparseAutoTokenizer.from_pretrained(model_path)
 inputs = tokenizer(["Large language models are"], return_tensors="pt")
@@ -220,7 +221,7 @@ SparseML provides a simple export command to do so:
         from sparseml import export
 
         export(
-            "./finetune-example",
+            "./finetune-example/quantization_stage",
             task="text-generation",
             sequence_length=1024,
             target_path="./exported"
@@ -232,10 +233,12 @@ SparseML provides a simple export command to do so:
 
         ```bash
         sparseml.export \
-            "./finetue-example" \
+            "./finetune-example/quantization_stage" \
             --task "text-generation" \
             --sequence_length 1024 \
             --target_path "./exported"
+            --text_column_name prompt \
+            --text_column_name canonical_solution
         ```
 
     </TabItem>
