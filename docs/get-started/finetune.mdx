@@ -187,7 +187,9 @@ After running the above code, the model is pruned to 50% sparsity, fine-tuned, a
             sparseml.evaluate \
                 "./finetune-example/quantization_stage" \
                 --datasets "openai_humaneval" \
-                --integration "perplexity"
+                --integration "perplexity" \
+                --text_column_name prompt \
+                --text_column_name canonical_solution
             ```
 
         </TabItem>
@@ -237,8 +239,6 @@ SparseML provides a simple export command to do so:
             --task "text-generation" \
             --sequence_length 1024 \
             --target_path "./exported"
-            --text_column_name prompt \
-            --text_column_name canonical_solution
         ```
 
     </TabItem>
