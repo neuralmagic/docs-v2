@@ -161,12 +161,13 @@ After running the above code, the model is transferred to the Helpful Instructio
             ```python
             from sparseml import evaluate
 
-            evaluate(
+            eval = evaluate(
                 "./transfer-example/quantization_stage",
                 datasets="openai_humaneval",
                 integration="perplexity",
                 text_column_name=["prompt", "canonical_solution"]
             )
+            print(eval)
             ```
 
         </TabItem>
@@ -176,7 +177,7 @@ After running the above code, the model is transferred to the Helpful Instructio
             sparseml.evaluate \
                 "./transfer-example/quantization_stage" \
                 --datasets "openai_humaneval" \
-                --integration "perplexity"
+                --integration "perplexity" \
                 --text_column_name prompt \
                 --text_column_name canonical_solution
             ```

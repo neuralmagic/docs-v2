@@ -155,12 +155,13 @@ After running the above code, the model is pruned to 50% sparsity and quantized,
             ```python
             from sparseml import evaluate
 
-            evaluate(
+            eval = evaluate(
                 "./one-shot-example/stage_compression",
                 datasets="openai_humaneval",
                 integration="perplexity",
                 text_column_name=["prompt", "canonical_solution"]
             )
+            print(eval)
             ```
 
         </TabItem>

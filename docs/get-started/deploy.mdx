@@ -189,12 +189,12 @@ The following command utilizes the sparsified model and DeepSparse to establish 
         ```python
         from deepsparse import evaluate
 
-        result = evaluate(
+        eval = evaluate(
             "zoo:llama2-7b-ultrachat200k_llama2_pretrain-pruned50_quantized",
             datasets="openai_humaneval",
             integration="perplexity"
         )
-        print(result)
+        print(eval)
         ```
 
     </TabItem>

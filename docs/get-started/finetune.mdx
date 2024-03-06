@@ -172,12 +172,13 @@ After running the above code, the model is pruned to 50% sparsity, fine-tuned, a
             ```python
             from sparseml import evaluate
 
-            evaluate(
+            eval = evaluate(
                 "./finetune-example/quantization_stage",
                 datasets="openai_humaneval",
                 integration="perplexity",
                 text_column_name=["prompt", "canonical_solution"]
             )
+            print(eval)
             ```
 
         </TabItem>
