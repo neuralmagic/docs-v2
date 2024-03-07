@@ -1,8 +1,9 @@
 import React from 'react';
 import {useDoc} from '@docusaurus/theme-common/internal';
+import usePluginData from '@docusaurus/useGlobalData';
 
 
-const processChildren = (child, currentVersion, targetVersion, targetProducts, prepend, currentTag, ignoreNightly) => {
+const processChildren = (child, currentVersion, lastVersion, targetVersion, targetProducts, prepend, currentTag, ignoreNightly) => {
     if (typeof child === 'string') {
         let version = currentVersion;
         let products = [...targetProducts];
@@ -21,6 +22,8 @@ const processChildren = (child, currentVersion, targetVersion, targetProducts, p
                 }
             }
             version = currentTag;
+        } else if (version === lastVersion) {
+            version = '';
         } else if (prepend) {
             version = `${prepend}${version}`;
         }
@@ -35,11 +38,11 @@ const processChildren = (child, currentVersion, targetVersion, targetProducts, p
     }
 
     if (React.isValidElement(child)) {
-        return React.cloneElement(child, child.props, processChildren(child.props.children, currentVersion, targetVersion, targetProducts, prepend, currentTag, ignoreNightly));
+        return React.cloneElement(child, child.props, processChildren(child.props.children, currentVersion, lastVersion, targetVersion, targetProducts, prepend, currentTag, ignoreNightly));
     }
 
     if (Array.isArray(child)) {
-        return child.map(c => processChildren(c, currentVersion, targetVersion, targetProducts, prepend, currentTag, ignoreNightly));
+        return child.map(c => processChildren(c, currentVersion, lastVersion, targetVersion, targetProducts, prepend, currentTag, ignoreNightly));
     }
 
     return child;
@@ -48,9 +51,14 @@ const processChildren = (child, currentVersion, targetVersion, targetProducts, p
 
 const VersionInjector = ({ children, targetVersion = 'VERSION', targetProduct = 'PRODUCT', prepend = '', currentTag = '', ignoreNightly = false}) => {
     const { metadata } = useDoc();
+    const pluginData = usePluginData('docusaurus-plugin-content-docs')['docusaurus-plugin-content-docs'];
+    const versions = pluginData.default.versions;
+    const lastVersionData = versions.find(version => version.isLast);
+    const lastVersion = lastVersionData.name;
+
     const currentVersion = metadata.version;
     const targetProducts = Array.isArray(targetProduct) ? targetProduct : [targetProduct];
-    const processedChildren = processChildren(children, currentVersion, targetVersion, targetProducts, prepend, currentTag, ignoreNightly);
+    const processedChildren = processChildren(children, currentVersion, lastVersion, targetVersion, targetProducts, prepend, currentTag, ignoreNightly);
 
     return <>{processedChildren}</>;
 };
