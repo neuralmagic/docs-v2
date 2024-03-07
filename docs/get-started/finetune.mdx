@@ -119,7 +119,7 @@ The code below demonstrates applying one-shot pruning, followed by finetuning, a
                     targets: ["re:.*q_proj.weight", "re:.*k_proj.weight", "re:.*v_proj.weight", "re:.*o_proj.weight", "re:.*gate_proj.weight", "re:.*up_proj.weight", "re:.*down_proj.weight"]
                     start: 0
 
-        quantization_stage:
+        stage_quantization:
             run_type: oneshot
             quantize_modifiers:
                 QuantizationModifier:
@@ -173,7 +173,7 @@ After running the above code, the model is pruned to 50% sparsity, fine-tuned, a
             from sparseml import evaluate
 
             eval = evaluate(
-                "./finetune-example/quantization_stage",
+                "./finetune-example/stage_quantization",
                 datasets="openai_humaneval",
                 integration="perplexity",
                 text_column_name=["prompt", "canonical_solution"]
@@ -186,7 +186,7 @@ After running the above code, the model is pruned to 50% sparsity, fine-tuned, a
 
             ```bash
             sparseml.evaluate \
-                "./finetune-example/quantization_stage" \
+                "./finetune-example/stage_quantization" \
                 --datasets "openai_humaneval" \
                 --integration "perplexity" \
                 --text_column_name prompt \
@@ -204,7 +204,7 @@ To test the model's generation capabilities, we can use the following code to ge
 ```python
 from sparseml.transformers import SparseAutoModelForCausalLM, SparseAutoTokenizer
 
-model_path = "./finetune-example/quantization_stage"
+model_path = "./finetune-example/stage_quantization"
 model = SparseAutoModelForCausalLM.from_pretrained(model_path, device_map="auto")
 tokenizer = SparseAutoTokenizer.from_pretrained(model_path)
 inputs = tokenizer(["Large language models are"], return_tensors="pt")
@@ -224,7 +224,7 @@ SparseML provides a simple export command to do so:
         from sparseml import export
 
         export(
-            "./finetune-example/quantization_stage",
+            "./finetune-example/stage_quantization",
             task="text-generation",
             sequence_length=1024,
             target_path="./exported"
@@ -236,7 +236,7 @@ SparseML provides a simple export command to do so:
 
         ```bash
         sparseml.export \
-            "./finetune-example/quantization_stage" \
+            "./finetune-example/stage_quantization" \
             --task "text-generation" \
             --sequence_length 1024 \
             --target_path "./exported"
