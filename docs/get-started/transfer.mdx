@@ -90,7 +90,7 @@ The code below demonstrates finetuning the model while preserving the sparsity a
         )
         tokenizer = SparseAutoTokenizer.from_pretrained(
             "zoo:llama2-7b-open_platypus_orca_llama2_pretrain-pruned60"
-        )
+        ).to(model.device)
         dataset = load_dataset("HuggingFaceH4/helpful_instructions")
 
         def format_data(data):
@@ -195,7 +195,7 @@ from sparseml.transformers import SparseAutoModelForCausalLM, SparseAutoTokenize
 
 model_path = "./transfer-example/stage_quantization"
 model = SparseAutoModelForCausalLM.from_pretrained(model_path, device_map="auto")
-tokenizer = SparseAutoTokenizer.from_pretrained(model_path)
+tokenizer = SparseAutoTokenizer.from_pretrained(model_path).to(model.device)
 inputs = tokenizer(["Large language models are"], return_tensors="pt")
 generated_ids = model.generate(**inputs)
 outputs = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)
