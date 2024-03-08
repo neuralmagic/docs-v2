@@ -23,6 +23,9 @@ const config = {
     defaultLocale: 'en',
     locales: ['en'],
   },
+  markdown: {
+    format: 'detect',
+  },
   plugins: [
     'docusaurus-plugin-sass',
   ],

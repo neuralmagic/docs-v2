@@ -46,7 +46,7 @@ For the most common use case, install the current release version of SparseZoo u
 
 For development purposes or advanced use cases, install directly from the GitHub repository:
 
-<VersionInjector targetProduct="sparsezoo" prepend="v" currentTag="main" ignoreNightly={true}>
+<VersionInjector targetProduct="sparsezoo" prepend="v" currentTag="main" ignoreNightly={true} ignoreLastVersion={true}>
     ```bash
     pip install git+https://github.com/neuralmagic/sparsezoo.git@VERSION
     ```
@@ -54,7 +54,7 @@ For development purposes or advanced use cases, install directly from the GitHub
 
 Or from a locally cloned repository:
 
-<VersionInjector targetProduct="sparsezoo" prepend="tags/v" currentTag="main" ignoreNightly={true}>
+<VersionInjector targetProduct="sparsezoo" prepend="tags/v" currentTag="main" ignoreNightly={true} ignoreLastVersion={true}>
     ```bash
     git clone https://github.com/neuralmagic/sparsezoo.git
     cd sparsezoo

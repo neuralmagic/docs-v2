@@ -49,12 +49,12 @@ const processChildren = (child, currentVersion, lastVersion, targetVersion, targ
 };
 
 
-const VersionInjector = ({ children, targetVersion = 'VERSION', targetProduct = 'PRODUCT', prepend = '', currentTag = '', ignoreNightly = false}) => {
+const VersionInjector = ({ children, targetVersion = 'VERSION', targetProduct = 'PRODUCT', prepend = '', currentTag = '', ignoreNightly = false, ignoreLastVersion = false}) => {
     const { metadata } = useDoc();
     const pluginData = usePluginData('docusaurus-plugin-content-docs')['docusaurus-plugin-content-docs'];
     const versions = pluginData.default.versions;
     const lastVersionData = versions.find(version => version.isLast);
-    const lastVersion = lastVersionData.name;
+    const lastVersion = ignoreLastVersion ? null : lastVersionData.name;
 
     const currentVersion = metadata.version;
     const targetProducts = Array.isArray(targetProduct) ? targetProduct : [targetProduct];
