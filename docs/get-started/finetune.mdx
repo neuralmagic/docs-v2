@@ -1,29 +1,29 @@
 ---
 tags:
-- finetuning
+- fine-tuning
 - optimization
 - llm
 - sparsezoo
 - performance
 - neural magic
 keywords:
-- LLM finetuning
+- LLM fine-tuning
 - SparseML
 - efficient inference
 - accuracy recovery
-description: Improve the performance of your large language models (LLMs) through finetuning with Neural Magic's SparseML. Optimize LLMs for specific tasks while maintaining accuracy.
-sidebar_label: Sparse Finetuning
+description: Improve the performance of your large language models (LLMs) through fine-tuning with Neural Magic's SparseML. Optimize LLMs for specific tasks while maintaining accuracy.
+sidebar_label: Sparse Fine-Tuning
 sidebar_position: 4
 ---
 
-# Sparse Finetuning with LLMs
+# Sparse Fine-Tuning With LLMs
 
-This guide focuses on improving the performance of large language models (LLMs) after pruning by applying finetuning techniques and then quantizing them for efficient inference.
+This guide focuses on improving the performance of large language models (LLMs) after pruning by applying fine-tuning techniques and then quantizing them for efficient inference.
 You'll learn how to:
 
-- <b>Recover Accuracy:</b> Mitigate potential accuracy loss from aggressive pruning by finetuning sparsified models.
-- <b>Apply Finetuning and Distillation:</b> Leverage knowledge from the original model to refine the sparse model during finetuning.
-- <b>Adapt to Domains:</b> Finetune LLMs to excel in particular domains or use cases.
+- <b>Recover Accuracy:</b> Mitigate potential accuracy loss from aggressive pruning by fine-tuning sparsified models.
+- <b>Apply Fine-Tuning and Distillation:</b> Leverage knowledge from the original model to refine the sparse model during fine-tuning.
+- <b>Adapt to Domains:</b> Fine-tune LLMs to excel in particular domains or use cases.
 
 ## Prerequisites
 
@@ -31,7 +31,7 @@ You'll learn how to:
 - <b>SparseML LLM Installation:</b> An environment with DeepSparse for LLMs installed as outlined in the [Install Guide](./install#llms---causal-language-modeling).
 - <b>Background:</b> Familiarity with Generative AI and working with large language models is recommended.
 
-## Sparse Finetuning a Llama Model
+## Sparse Fine-Tuning a Llama Model
 
 We'll use a pre-trained, unoptimized 7b Llama 2 chat model from the SparseZoo trained for instruction tuning utilizing the Open Platypus dataset.
 The model is referenced by the following SparseZoo stub:
@@ -70,14 +70,14 @@ For this example, we'll use the Open Platypus dataset, which is available in the
 
 For comprehensive data preparation guidelines, including formats like CSV and JSONL, refer to our [detailed datasets guide](../llms/data).
 
-### One Shot Plus Sparse Finetuning
+### One-Shot Plus Sparse Fine-Tuning
 
 Applying pruning in one shot to an LLM can result in drops in accuracy at higher sparsity levels.
-To mitigate this, SparseML can apply a recipe that includes pruning and finetuning.
-Finetuning the model after pruning will help to recover any lost accuracy and improve the model's performance at higher sparsity levels.
+To mitigate this, SparseML can apply a recipe that includes pruning and fine-tuning.
+Fine-tuning the model after pruning will help to recover any lost accuracy and improve the model's performance at higher sparsity levels.
 As in the one-shot guide, we'll apply the SparseGPT algorithm and the `compress` command in SparseML to a trained model.
 
-The code below demonstrates applying one-shot pruning, followed by finetuning, and finally, one-shot quantization to the Llama model utilizing a recipe:
+The code below demonstrates applying one-shot pruning, followed by fine-tuning, and finally, one-shot quantization to the Llama model utilizing a recipe:
 
 <Tabs>
     <TabItem value="python" label="Python" default>
@@ -246,7 +246,7 @@ SparseML provides a simple export command to do so:
 </Tabs>
 
 The exported model located at `./exported` can now be used for efficient inference with DeepSparse.
-To do so, sub in the exported model within the previous [Getting Started - Deploy](./deploy) guide for your desired deployment method.
+To do so, substitute the exported model within the previous [Getting Started - Deploy](./deploy) guide for your desired deployment method.
 
 ---
 
