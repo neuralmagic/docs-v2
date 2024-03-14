@@ -16,7 +16,7 @@ sidebar_position: 1
 
 # Installing SparseML
 
-SparseML is Neural Magic's core toolkit for streamlining the optimization of deep learning models using cutting-edge sparsification methods (pruning, quantization, etc.).
+SparseML is Neural Magic's core toolkit for streamlining the optimization of deep learning models using cutting-edge sparsification methods (e.g., pruning, quantization).
 This guide covers installation options, including PyPI, GitHub, and specialized applications for various AI domains.
 
 ## Prerequisites
@@ -29,7 +29,7 @@ This guide covers installation options, including PyPI, GitHub, and specialized 
 
 ### Software Requirements
 
-- <b>OS:</b> Linux (Ubuntu, CentOS, RedHat, etc.). MacOS (limited support)
+- <b>OS:</b> Linux (e.g., Ubuntu, CentOS, Red Hat); MacOS (limited support)
 - <b>Python:</b> 3.8 - 3.11
 - <b>PyTorch:</b> >= 1.1.0, < 2.2
 
@@ -71,10 +71,10 @@ Or from a locally cloned repository:
 
 Install SparseML with tailored support with the following extras for domain-specific use cases and tasks.
 
-### Generative AI: HuggingFace
+### Generative AI: Hugging Face
 
 This extra provides built-in support for models like Llama, Mistral, MPT, GPT, and others for generative AI, particularly transformer architectures.
-It enables compatibility of HuggingFace's transformers pipelines and models to SparseML allowing SOTA pruning, quantization, and other optimizations.
+It enables compatibility of Hugging Face's Transformer pipelines and models to SparseML allowing SOTA pruning, quantization, and other optimizations.
 
 <VersionInjector targetProduct="sparseml[llm]" targetVersion="==VERSION" prepend="==">
     ```bash
@@ -104,10 +104,10 @@ It enables compatibility of TorchVision models to SparseML, allowing SOTA prunin
     ```
 </VersionInjector>
 
-### Natural Language Processing: HuggingFace
+### Natural Language Processing: Hugging Face
 
-This extra provides built-in support for HuggingFace's transformers models for natural language processing.
-It enables compatibility of HuggingFace models to SparseML, allowing SOTA pruning, quantization, and other optimizations.
+This extra provides built-in support for Hugging Face's Transformer models for natural language processing.
+It enables compatibility of Hugging Face models to SparseML, allowing SOTA pruning, quantization, and other optimizations.
 
 <VersionInjector targetProduct="sparseml[transformers]" targetVersion="==VERSION" prepend="==">
     ```bash
