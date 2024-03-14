@@ -2,7 +2,7 @@
 sidebar_position: 3
 ---
 
-# Compress LLMs with SparseGPT 
+# Compress LLMs With SparseGPT 
 
 This page describes how to perform one-shot quantization of large language models using [SparseML](https://github.com/neuralmagic/sparseml). This workflow requires a GPU with at least 16GB VRAM and 64GB of system RAM.
 
@@ -18,7 +18,7 @@ git clone https://github.com/neuralmagic/sparseml
 pip install -e "sparseml[transformers]"
 ```
 
-## How to One-shot TinyLlama
+## How to One-Shot TinyLlama
 [TinyLlama-1.1B-Chat](https://huggingface.co/TinyLlama/TinyLlama-1.1B-Chat-v0.4) is an LLM that we can quantize in a short time because it has 1.1B parameters. 
 
 Perform one-shot using the OBCQ algorithm. The command takes the following parameters: 
@@ -108,7 +108,7 @@ hf-causal-experimental (pretrained=/home/mwitiderrick/neuralmagic/sparseml/obcq_
 Execution time was 1288 seconds.
 ```
 Repeat the above on other tasks such as `truthfulqa-mc`, `winogrande`, and `drop`.
-## How to Export the One-shot Model
+## How to Export the One-Shot Model
 Once you are certain the model is performing as expected, you can export it for inference. The `sparseml.export` command provides the functions for doing this. Running the command below creates a `deployment` directory containing all the artifacts that are needed for inference with DeepSparse. It will also inject KV Cache to reduce the model’s computational overhead and speed up inference by caching the Key and Value states.
 ```bash
 sparseml.export --task text-generation obcq_deployment/
@@ -135,7 +135,7 @@ There are many factors to consider when choosing a university. Here are some tip
 
 4. Get involved with your community: Your university will likely have a community of students and faculty. Engage with this community by volunteering, participating in clubs, and engaging with others in your community.
 
-5. Get involved with extracurricular activities: Universities often have many extracurricular activities, which can help you meet new people
+5. Get involved with extracurricular activities: Universities often have many extracurricular activities, which can help you meet new people.
 """
 ```
 Check out the [DeepSparse pipeline text generation docs](https://github.com/neuralmagic/deepsparse/blob/main/src/deepsparse/transformers/text_generation.md) for the full list of supported parameters. 
@@ -216,7 +216,7 @@ You can modify the above recipe to perform one-shot quantization on other models
 
 Perform the following modifications on the recipe to one-shot a Mistral model.
 - Define the operations we want to skip during quantization, that is sensitive layers and operations that don't make sense to quantize.
-- Declare the desired sparsity level, same as the one for TinyLlama.
+- Declare the desired sparsity level, the same as the one for TinyLlama.
 - State the layers to compress during OBCQ.
 
 Here is what the final recipe looks like: 
