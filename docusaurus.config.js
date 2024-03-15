@@ -28,6 +28,23 @@ const config = {
   },
   plugins: [
     'docusaurus-plugin-sass',
+    [
+      '@docusaurus/plugin-client-redirects',
+      {
+        fromExtensions: ['html'], // Optional - restrict source file extensions
+        createRedirects: (existingPath) => {
+          // Reference your JSON file with redirects data
+          const redirectsData = require('./redirects.json');
+
+          return redirectsData.map(entry => {
+            return {
+              from: entry.path,
+              to: entry.target,
+            };
+          });
+        },
+      },
+    ],
   ],
   presets: [
     [

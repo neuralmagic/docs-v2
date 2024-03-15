@@ -1,13 +1,13 @@
 ---
 tags:
-- finetuning
+- fine-tuning
 - optimization
 - llm
 - sparsezoo
 - performance
 - neural magic
 keywords:
-- LLM finetuning
+- LLM fine-tuning
 - SparseML
 - efficient inference
 - sparse transfer learning
@@ -16,10 +16,10 @@ sidebar_label: Sparse Transfer
 sidebar_position: 4
 ---
 
-# Sparse Transfering LLMs
+# Sparse Transferring LLMs
 
 This guide focuses on adapting large language models (LLMs) to new domains and tasks using sparse transfer learning.
-By leveraging a pre-sparsified model's structure, you can efficiently finetune on new data, leading to reduced hyperparameter tuning, training times, and computational costs.
+By leveraging a pre-sparsified model's structure, you can efficiently fine-tune on new data, leading to reduced hyperparameter tuning, training times, and computational costs.
 
 You'll learn how to:
 
@@ -32,9 +32,9 @@ You'll learn how to:
 - <b>SparseML LLM Installation:</b> An environment with DeepSparse for LLMs installed as outlined in the [Install Guide](./install#llms---causal-language-modeling).
 - <b>Background:</b> Familiarity with Generative AI and working with large language models is recommended.
 
-## Sparse Transfering a Llama Model
+## Sparse Transferring a Llama Model
 
-We'll use a pre-sparsified 7b Llama 2 instruction tuning model from the SparseZoo finetuned on the OpenPlatypus dataset.
+We'll use a pre-sparsified 7b Llama 2 instruction tuning model from the SparseZoo fine-tuned on the OpenPlatypus dataset.
 The model is referenced by the following SparseZoo stub:
 ```text
 zoo:llama2-7b-open_platypus_orca_llama2_pretrain-pruned60
@@ -43,7 +43,7 @@ zoo:llama2-7b-open_platypus_orca_llama2_pretrain-pruned60
 ### Data Preparation
 
 A dataset is required for transferring the pre-sparsified model's structure.
-For this example, we'll use the Helpful Instructions dataset from the HuggingFace H4 team, which is available in the Hugging Face dataset hub and can be loaded as follows:
+For this example, we'll use the Helpful Instructions dataset from the Hugging Face H4 team, which is available in the Hugging Face dataset hub and can be loaded as follows:
 
 <Tabs>
     <TabItem value="python" label="Python" default>
@@ -71,9 +71,9 @@ For comprehensive data preparation guidelines, including formats like CSV and JS
 
 Creating sparse models from scratch can be time-consuming and computationally expensive.
 Sparse transfer learning, however, allows you to leverage pre-sparsified models to adapt to new domains and tasks efficiently without extensive training.
-As in the one-shot and finetuning guides, we'll use a recipe and the `compress` command in SparseML to the pre-sparsified model from the SparseZoo.
+As in the one-shot and fine-tuning guides, we'll use a recipe and the `compress` command in SparseML to the pre-sparsified model from the SparseZoo.
 
-The code below demonstrates finetuning the model while preserving the sparsity and at the end, one-shot quantization to the Llama model utilizing a recipe:
+The code below demonstrates fine-tuning the model while preserving the sparsity and at the end, one-shot quantization to the Llama model utilizing a recipe:
 
 
 <Tabs>

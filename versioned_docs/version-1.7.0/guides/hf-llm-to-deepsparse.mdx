@@ -1,14 +1,14 @@
 ---
 sidebar_position: 2
-title: Convert LLMs from HF
+title: Convert LLMs From Hugging Face
 ---
 
 
-# I have a HF model, how do I use it with DeepSparse?
+# I have a Hugging Face model; how do I use it with DeepSparse?
 
 This guide is for people interested in exporting their Hugging Face-compatible LLMs to work in DeepSparse.
 
-### Step 1: Install SparseML with HF Transformers Support
+### Step 1: Install SparseML With Hugging Face Transformers Support
 
 SparseML provides tools for optimizing machine learning models for deployment. To install it along with the necessary support for Hugging Face Transformers, open your terminal and run:
 ```bash
@@ -18,7 +18,7 @@ pip install sparseml-nightly[transformers]
 > #### Note on system requirements
 > Due to inefficiencies in PyTorch ONNX export, a lot of system memory is required to export the models for inference. There are [improvements coming in torch>=2.2 so use the latest version possible](https://github.com/pytorch/pytorch/commit/b4a49124c8165a374a3ef49e14807ac05b3fc030).
 
-### Step 2: Preparing Your Model
+### Step 2: Prepare Your Model
 
 Before exporting your model, you need to download its weights from the Hugging Face Hub.
 
@@ -27,7 +27,7 @@ Use the Hugging Face CLI tool to download the model of your choice. For example,
 huggingface-cli download TinyLlama/TinyLlama-1.1B-Chat-v1.0 --local-dir original_model --local-dir-use-symlinks False
 ```
 This command saves the model to a directory named `original_model` in your current working directory.
-### Step 3: Exporting the Model to ONNX
+### Step 3: Export the Model to ONNX
 
 Now, you'll export the model to the ONNX format, which is compatible with DeepSparse.
 
@@ -45,7 +45,7 @@ huggingface-cli upload --repo-type model username/your-model-id-ds original_mode
 
 Make sure to add the `-ds` ending and use the `deepsparse` in your README to make it easy to find compatible models!
 
-### Step 4: Running Inference with DeepSparse
+### Step 4: Run Inference With DeepSparse
 
 After exporting your model, you can run inference using DeepSparse.
 
