@@ -8,6 +8,8 @@ import navLinks from "./navlinks";
 import footerLinks from "./footerlinks";
 import { themes as prismThemes } from 'prism-react-renderer';
 
+const redirects = require('./redirects.json');
+
 
 const config = {
   title: 'Neural Magic Documentation',
@@ -31,18 +33,8 @@ const config = {
     [
       '@docusaurus/plugin-client-redirects',
       {
-        fromExtensions: ['html'], // Optional - restrict source file extensions
-        createRedirects: (existingPath) => {
-          // Reference your JSON file with redirects data
-          const redirectsData = require('./redirects.json');
-
-          return redirectsData.map(entry => {
-            return {
-              from: entry.path,
-              to: entry.target,
-            };
-          });
-        },
+        fromExtensions: ['html'],
+        redirects: redirects,
       },
     ],
   ],
