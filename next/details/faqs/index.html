@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.1.0">
 <title data-rh="true">FAQs | Neural Magic Documentation</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://neuralmagic.github.io/docs-v2/next/details/faqs"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="FAQs | Neural Magic Documentation"><meta data-rh="true" name="description" content="General Product FAQs"><meta data-rh="true" property="og:description" content="General Product FAQs"><link data-rh="true" rel="icon" href="/docs-v2/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://neuralmagic.github.io/docs-v2/next/details/faqs"><link data-rh="true" rel="alternate" href="https://neuralmagic.github.io/docs-v2/next/details/faqs" hreflang="en"><link data-rh="true" rel="alternate" href="https://neuralmagic.github.io/docs-v2/next/details/faqs" hreflang="x-default"><link data-rh="true" rel="preconnect" href="https://CIS4HPXHOK-dsn.algolia.net" crossorigin="anonymous"><link rel="search" type="application/opensearchdescription+xml" title="Neural Magic Documentation" href="/docs-v2/opensearch.xml"><link rel="stylesheet" href="/docs-v2/assets/css/styles.f5572321.css">
-<script src="/docs-v2/assets/js/runtime~main.fa0901b4.js" defer="defer"></script>
+<script src="/docs-v2/assets/js/runtime~main.14c2013e.js" defer="defer"></script>
 <script src="/docs-v2/assets/js/main.fa387930.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -17,6 +17,7 @@ DeepSparse is an inference runtime offering GPU-class performance on CPUs and to
 integrate ML into your application. <a href="/docs-v2/products/sparseml">SparseML</a> and <a href="/docs-v2/products/sparsezoo">SparseZoo,</a> are open-source tooling and a model repository
 combination that enables you to create an inference-optimized sparse-model for deployment with DeepSparse.</p>
 <p>Together, these components remove the tradeoff between performance and the simplicity and scalability of software-delivered deployments.</p>
+<p><em>As of 2024, Neural Magic will be announcing sparsity on GPUs to complement our CPU efforts. Stay tuned!</em></p>
 <p><strong>What is DeepSparse?</strong></p>
 <p>DeepSparse, created by Neural Magic, is an inference runtime for deep learning models. It delivers state of art, GPU-class performance on commodity CPUs
 as well as tooling for integrating a model into an application and monitoring models in production.</p>
@@ -36,15 +37,14 @@ support for AVX2, AVX-512, and VNNI instruction sets. Specific support details f
 <p>We are open to opportunities to expand our support footprint for different CPU-based processor architectures, based on
 market adoption and deep learning use cases.</p>
 <p><strong>Do you run on ARM architecture?</strong></p>
-<p>We are continuing to work on ARM support, primarily focused on LLMs and transformer models for server-grade systems like AWS Graviton and Ampere Currently, we have limited alpha support for CNN models on embedded systems, particularly those with dot product instructions (ARMv8.2+). ARM and MacOS has beta support. Feel free to <em>pip install deepsparse-nightyly</em> if you would like to try it out. We would like to hear your use cases and keep you in the
+<p>We have provided ARM support as of our 1.6 release. We primarily focused on LLMs and transformer models for server-grade systems like AWS Graviton and Ampere Currently, we have limited alpha support for CNN models on embedded systems, particularly those with dot product instructions (ARMv8.2+). ARM on MacOS has beta support. Feel free to <code>pip install deepsparse-nightly</code> if you would like to try it out. We would like to hear your use cases and keep you in the
 loop! <a href="https://neuralmagic.com/contact/" target="_blank" rel="noopener noreferrer">Contact us to continue the conversation</a>.</p>
 <p><strong>To what use cases is the Neural Magic Platform best suited?</strong></p>
-<p>We focus on the models and use cases related to computer vision and NLP due to cost sensitivity and both real-time and throughput constraints.
-The belief now is GPUs are required for deployment.</p>
+<p>We focus on the models and use cases related to LLMs, computer vision, and NLP where there may be cost sensitivity and both real-time and throughput constraints.</p>
 <p><strong>What types of models does Neural Magic support?</strong></p>
-<p>Today, we offer support for CNN-based computer vision models, specifically classification and object detection model types.
+<p>Today, we offer support for LLMs, CNN-based computer vision models, specifically classification and object detection model types.
 NLP models like BERT are also available. We are continuously adding models to <a href="https://sparsezoo.neuralmagic.com" target="_blank" rel="noopener noreferrer">the SparseZoo.</a>
-Additionally, we are investigating model architectures beyond computer vision.</p>
+Additionally, we are constantly investigating new model architectures.</p>
 <p><strong>Is dynamic shape supported?</strong></p>
 <p>Dynamic shape is currently not supported; be sure to use models with fixed inputs and compile the model for a particular batch size.
 Dynamic shape and dynamic batch sizes are on the Neural Magic roadmap; <a href="https://neuralmagic.com/subscribe/" target="_blank" rel="noopener noreferrer">subscribe for updates.</a></p>
@@ -70,7 +70,7 @@ Neural Magic is happy to discuss your use cases and offer recommendations.</p>
 <p>Yes, absolutely. We can run anywhere you have a CPU with x86 instructions, including on bare metal, in the cloud,
 on-prem, or at the edge. Additionally, our model optimization tools are able to reduce the footprint of models
 across all architectures. We only guarantee performance in DeepSparse.</p>
-<p>We’d love to hear from users highly interested in ML performance. If you want to chat about your use cases
+<p>We ’d love to hear from users highly interested in ML performance. If you want to chat about your use cases
 or how others are leveraging the Neural Magic Platform, <a href="https://neuralmagic.com/contact/" target="_blank" rel="noopener noreferrer">please contact us.</a>
 Or simply head over to the <a href="https://github.com/neuralmagic" target="_blank" rel="noopener noreferrer">Neural Magic GitHub repo</a> and check out our tools.</p>
 <p><strong>Do you have available solutions or applications on the Microsoft/Azure platform?</strong></p>
@@ -95,7 +95,7 @@ Neural Magic, <em><a href="https://arxiv.org/abs/2004.14340" target="_blank" rel
 <p>In a scenario in which you want to sparsify and then run your own model with DeepSparse, you would first
 sparsify your model to achieve the desired level of performance and accuracy using Neural Magic’s <a href="/docs-v2/products/sparseml">SparseML</a> tooling.</p>
 <p><strong>What does the sparsification process look like?</strong></p>
-<p>Neural Magic’s Sparsify and SparseML tooling, at its core, uses well-established state-of-the-art research principles such as
+<p>Neural Magic’s SparseML tooling, at its core, uses well-established state-of-the-art research principles such as
 <a href="https://neuralmagic.com/blog/pruning-gmp/" target="_blank" rel="noopener noreferrer">Gradual Magnitude Pruning</a> (GMP) to sparsify models. This is an iterative process
 in which groups of important weights are pruned away and then the network is allowed to recover. To significantly simplify the process,
 we offer tools and guidance for you to achieve the best performance possible. To peruse research papers contributed by Neural Magic
