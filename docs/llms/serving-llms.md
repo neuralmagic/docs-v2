@@ -3,7 +3,7 @@ title: Serving LLMs
 sidebar_position: 1
 ---
 
-# Deploy LLMs with DeepSparse
+# Deploy LLMs With DeepSparse
 
 [DeepSparse](https://github.com/neuralmagic/deepsparse) is a CPU inference runtime that takes advantage of sparsity to accelerate neural network inference. Coupled with [SparseML](https://github.com/neuralmagic/sparseml), our optimization library for pruning and quantizing your models, DeepSparse delivers exceptional inference performance on CPU hardware.
 
@@ -31,7 +31,7 @@ One day, a little girl named Lily went to the park with her mommy. They saw a bi
 
 ### Supported LLM Architectures 
 
-DeepSparse supports many Hugging Face models through [ONNX export through SparseML](./guides/hf-llm-to-deepsparse.mdx), include the following architectures:
+DeepSparse supports many Hugging Face models through [ONNX export through SparseML](./guides/hf-llm-to-deepsparse.mdx), including the following architectures:
 
 * LLaMA & LLaMA-2 - [neuralmagic/Llama2-7b-chat-pruned50-quant-ds](https://huggingface.co/neuralmagic/Llama2-7b-chat-pruned50-quant-ds), [neuralmagic/Nous-Hermes-llama-2-7b-pruned50-quant-ds](https://huggingface.co/neuralmagic/Nous-Hermes-llama-2-7b-pruned50-quant-ds), [neuralmagic/TinyLlama-1.1B-Chat-v0.4-pruned50-quant-ds](https://huggingface.co/neuralmagic/TinyLlama-1.1B-Chat-v0.4-pruned50-quant-ds) - [SparseZoo Models](https://sparsezoo.neuralmagic.com/?architectures=llama2&ungrouped=true)
 * Mistral - [neuralmagic/OpenHermes-2.5-Mistral-7B-pruned50-quant-ds](https://huggingface.co/neuralmagic/OpenHermes-2.5-Mistral-7B-pruned50-quant-ds) - [SparseZoo Models](https://sparsezoo.neuralmagic.com/?architectures=mistral&ungrouped=true)
@@ -40,7 +40,7 @@ DeepSparse supports many Hugging Face models through [ONNX export through Sparse
 * SOLAR - [neuralmagic/Nous-Hermes-2-SOLAR-10.7B-pruned50-quant-ds](https://huggingface.co/neuralmagic/Nous-Hermes-2-SOLAR-10.7B-pruned50-quant-ds)
 
 
-### Making new DeepSparse-optimized models
+### Making New DeepSparse-Optimized Models
 
 [See the guide for compressing LLMs with SparseGPT](./guides/one-shot-llms-with-sparseml.mdx)
 
@@ -92,7 +92,7 @@ This server can be queried in the same format as OpenAI API. For example, list t
 curl http://localhost:5543/v1/models
 ```
 
-#### Using OpenAI Completions API with DeepSparse
+#### Using OpenAI Completions API With DeepSparse
 
 Query the model with input prompts:
 
@@ -120,9 +120,9 @@ completion = client.completions.create(model=model, prompt="San Francisco is a")
 print("Completion result:", completion)
 ```
 
-#### Using OpenAI Chat API with DeepSparse
+#### Using OpenAI Chat API With DeepSparse
 
-The DeepSparse server is designed to support the OpenAI Chat API, allowing you to engage in dynamic conversations with the model. The chat interface is a more interactive way to communicate with the model, allowing back-and-forth exchanges that can be stored in the chat history. This is useful for tasks that require context or more detailed explanations.
+The DeepSparse Server is designed to support the OpenAI Chat API, allowing you to engage in dynamic conversations with the model. The chat interface is a more interactive way to communicate with the model, allowing back-and-forth exchanges that can be stored in the chat history. This is useful for tasks that require context or more detailed explanations.
 
 Querying the model using OpenAI Chat API:
 
