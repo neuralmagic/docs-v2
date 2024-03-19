@@ -16,6 +16,8 @@ combination that enables you to create an inference-optimized sparse-model for d
 
 Together, these components remove the tradeoff between performance and the simplicity and scalability of software-delivered deployments.
 
+*As of 2024, Neural Magic will be announcing sparsity on GPUs to complement our CPU efforts. Stay tuned!*
+
 **What is DeepSparse?**
 
 DeepSparse, created by Neural Magic, is an inference runtime for deep learning models. It delivers state of art, GPU-class performance on commodity CPUs
@@ -47,19 +49,18 @@ market adoption and deep learning use cases.
 
 **Do you run on ARM architecture?**
 
-We are continuing to work on ARM support, primarily focused on LLMs and transformer models for server-grade systems like AWS Graviton and Ampere Currently, we have limited alpha support for CNN models on embedded systems, particularly those with dot product instructions (ARMv8.2+). ARM and MacOS has beta support. Feel free to *pip install deepsparse-nightyly* if you would like to try it out. We would like to hear your use cases and keep you in the
+We have provided ARM support as of our 1.6 release. We primarily focused on LLMs and transformer models for server-grade systems like AWS Graviton and Ampere Currently, we have limited alpha support for CNN models on embedded systems, particularly those with dot product instructions (ARMv8.2+). ARM on MacOS has beta support. Feel free to `pip install deepsparse-nightly` if you would like to try it out. We would like to hear your use cases and keep you in the
 loop! [Contact us to continue the conversation](https://neuralmagic.com/contact/).
 
 **To what use cases is the Neural Magic Platform best suited?**
 
-We focus on the models and use cases related to computer vision and NLP due to cost sensitivity and both real-time and throughput constraints.
-The belief now is GPUs are required for deployment.
+We focus on the models and use cases related to LLMs, computer vision, and NLP where there may be cost sensitivity and both real-time and throughput constraints.
 
 **What types of models does Neural Magic support?**
 
-Today, we offer support for CNN-based computer vision models, specifically classification and object detection model types.
+Today, we offer support for LLMs, CNN-based computer vision models, specifically classification and object detection model types.
 NLP models like BERT are also available. We are continuously adding models to [the SparseZoo.](https://sparsezoo.neuralmagic.com)
-Additionally, we are investigating model architectures beyond computer vision.
+Additionally, we are constantly investigating new model architectures.
 
 **Is dynamic shape supported?**
 
@@ -139,7 +140,7 @@ sparsify your model to achieve the desired level of performance and accuracy usi
 
 **What does the sparsification process look like?**
 
-Neural Magic’s Sparsify and SparseML tooling, at its core, uses well-established state-of-the-art research principles such as
+Neural Magic’s SparseML tooling, at its core, uses well-established state-of-the-art research principles such as
 [Gradual Magnitude Pruning](https://neuralmagic.com/blog/pruning-gmp/) (GMP) to sparsify models. This is an iterative process
 in which groups of important weights are pruned away and then the network is allowed to recover. To significantly simplify the process,
 we offer tools and guidance for you to achieve the best performance possible. To peruse research papers contributed by Neural Magic
