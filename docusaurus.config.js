@@ -7,8 +7,7 @@
 import navLinks from "./navlinks";
 import footerLinks from "./footerlinks";
 import { themes as prismThemes } from 'prism-react-renderer';
-
-const redirects = require('./redirects.json');
+import redirects from './redirects.js';
 
 
 const config = {
